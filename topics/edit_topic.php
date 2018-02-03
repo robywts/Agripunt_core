@@ -73,7 +73,7 @@ include("../config.php");
                     <div class="row">
                         <div class="page-title">
 
-                            Add New Topic
+                            Edit Topic
 
                         </div>
                         <div class="bread-crumbs"><!-- Breadcrumbs-->

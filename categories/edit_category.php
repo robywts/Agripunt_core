@@ -72,7 +72,7 @@ include("../config.php");
                     <div class="row">
                         <div class="page-title">
 
-                            Add New Category
+                            Edit Category
 
                         </div>
                         <div class="bread-crumbs"><!-- Breadcrumbs-->

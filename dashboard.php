@@ -73,7 +73,7 @@ if (!(isset($_SESSION["login_user"]))) {
 
                     <li class="nav-item <?php if ($active == 'topics') echo 'active';
         else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="news_topics.html">
+                        <a class="nav-link" href="topics/news_topics.php">
                             <i class="fa fa-fw fa-newspaper-o"></i>
                             <span class="nav-link-text">News Topics</span>
                         </a>
@@ -269,8 +269,8 @@ if (!(isset($_SESSION["login_user"]))) {
 
                                 <div class="dashboard-card-btn">
 
-                                    <a class="btn btn-primary" href="news_topics.html" id="toggleNavPosition">View Topics</a>
-                                    <a class="btn btn-primary" href="add_new_topic.html" id="toggleNavPosition">Add  Topic</a>
+                                    <a class="btn btn-primary" href="topics/news_topics.php" id="toggleNavPosition">View Topics</a>
+                                    <a class="btn btn-primary" href="topics/add_new_topic.php" id="toggleNavPosition">Add  Topic</a>
                                 </div>
 
 
