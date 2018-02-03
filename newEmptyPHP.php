@@ -1,0 +1,27 @@
+<?php include "control.inc";
+include("config.php"); ?> <!DOCTYPE html> <html lang="en"> <?php include "head.php" ?> <body class="fixed-nav sticky-footer bg-dark" id="page-top"> <?php $active = "users";
+include "header.php"; ?> <div class="content-wrapper"> <div class="container-fluid"> <div class="col-md-12 "> <div class="row"> <div class="page-title"> Manage Users </div> <div class="bread-crumbs"><!-- Breadcrumbs--> <ol class="breadcrumb"> <li class="breadcrumb-item"> <a href="#">Dashboard</a> </li> <li class="breadcrumb-item active">Manage Users</li> </ol> </div> </div> </div> <!-- Example DataTables Card--> <div class="card mb-3"> <div class="card-body"> <div class="table-responsive"> <div class="col-md-6 float-right pr0 mb15"> <div class="col-sm-12 col-md-12 float-right text-right pr0"> <div id="dataTables-example_filter" class="dataTables_filter table-top-search"><input type="search" class="form-control form-control-sm" placeholder="Search Users" aria-controls="dataTables-example" name="search_all"></div><a class="btn btn-primary table-top-btn" href="invite_users.html">Invite Users</a> </div> </div> <!--<div id="tableContainer" class="tableContainer">--> <table class="table table-bordered scrollTable" id="dataTables-example2" width="100%" cellspacing="0"> <thead class="fixedHeader"> <tr class="alternateRow"> <th>Users</th> <th>Email</th> <th>Status</th> <th>Posts</th> <th>Action</th> </tr> </thead> <tr class="table-search"> <td ><label><input type="search" class="form-control form-control-sm" placeholder="Search by User" name="user_search" aria-controls="dataTables-example"></label></td> <td><label><input type="search" class="form-control form-control-sm" placeholder="Search by Email" name="email_search" aria-controls="dataTables-example" ></label></td> <td><label><input type="search" class="form-control form-control-sm" placeholder="Search by Status" name="status_search" aria-controls="dataTables-example" ></label></td> <td></td> <td></td> </tr> <tbody class="scrollContent"> <?php userlist($con, $user_search = '', $email_search = '', $status_search = '', $search_all = '');
+
+function userlist($con, $user_search, $email_search, $status_search, $search_all)
+{
+    $sql = "SELECT * FROM users WHERE type=2";
+    if ($user_search != '') $sql .= "AND name=$user_search";
+    if ($email_search != '') $sql .= "AND email=$email_search";
+    if ($status_search != '' && ($status_search == 'Active' || $status_search == 'InActive')) $sql .= "AND status=($status_search=='Active')? 1 : 0";
+    if ($search_all != '') $sql .= "OR name=$search_all OR email=$search_all";
+    $query = mysqli_query($con, $sql);
+    if (mysqli_num_rows($query) != 0) {
+        while ($row = mysqli_fetch_assoc($query)) {
+            $status = ($row['status'] == 0) ? 'Inactive' : 'Active';
+            echo "<tr class='normalRow'>";
+            echo "<td>" . $row['name'] . "</td>";
+            echo "<td>" . $row['email'] . "</td>";
+            echo "<td>" . $row['posts'] . "</td>";
+            echo "<td>" . $status . "</td>";
+            echo "<td><a href = 'edit_users.php/' class = 'btn edit '>EDIT</a> <a href = '#' class = 'btn delete'>DELETE</a></td>";
+            echo "</tr>";
+        }
+    }
+}
+// <tr> // <td>Mike Don</td> // <td>mmike@gmail.com</td> // <td>Active</td> // <td>12</td> // <td><a href = "edit_users.php/" class = "btn edit ">EDIT</a> <a href = "#" class = "btn delete">DELETE</a></td> // </tr>  ?> </tbody> </table> <!--</div>--> </div> </div> </div> </div> <!-- /.container-fluid--> <?php include "footer.php"; ?> </div> </body> </html> <script type="text/javascript"> $(document).ready(function () { $("input").keyup(function () {alert('dsadas'); var search = "searchName = " + $('#user_search').val() + ", searchEmail = " + $('#email_search').val() + ", searchStatus = " + $('#status_search').val() + ", searchAll = " + $('#search_all').val()"; document.cookie = "searchName = " + search; console.log(this.name); <?php $myPhpVar = $_COOKIE['searchName'];
+userlist($myPhpVar); ?> }); }); </script> <style> html>body tbody.scrollContent { display: block; height: 362px; overflow: auto; width: 100% } html>body thead.fixedHeader tr { display: block } html>body thead.fixedHeader th { /* TH 1 */ width: 225px } html>body thead.fixedHeader th + th { /* TH 2 */ width: 225px } html>body thead.fixedHeader th + th + th { /* TH 3 +16px for scrollbar */ width: 225px } html>body thead.fixedHeader th + th + th + th { /* TH 3 +16px for scrollbar */ width: 100px } html>body thead.fixedHeader th + th + th + th + th { /* TH 3 +16px for scrollbar */ width: 252px } html>body tr.table-search { display: block } html>body tr.table-search td { /* TH 1 */ width: 225px } html>body tr.table-search td + td { /* TH 2 */ width: 225px } html>body tr.table-search td + td + td { /* TH 3 +16px for scrollbar */ width: 225px } html>body tr.table-search td + td + td + td { /* TH 3 +16px for scrollbar */ width: 100px } html>body tr.table-search td + td + td + td + td { /* TH 3 +16px for scrollbar */ width: 252px } html>body tbody.scrollContent td { /* TD 1 */ width: 225px } html>body tbody.scrollContent td + td { /* TD 2 */ width: 225px } html>body tbody.scrollContent td + td + td { /* TD 3 +16px for scrollbar */ width: 225px } html>body tbody.scrollContent td + td + td + td { /* TD 3 +16px for scrollbar */ width: 100px } html>body tbody.scrollContent td + td + td + td + td { /* TD 3 +16px for scrollbar */ width: 237px } </style>

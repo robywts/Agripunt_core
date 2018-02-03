@@ -1,0 +1,2 @@
+03-Feb-2018
+ALTER TABLE `subject` CHANGE `subject_text` `subject_text` VARCHAR(200) NULL DEFAULT NULL;
