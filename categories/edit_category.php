@@ -15,8 +15,10 @@ include("../config.php");
         <!-- Navigation-->
         <?php
         $active = "categories";
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
+        if (isset($_POST['id']))
+            $_SESSION['id'] = $_POST['id'];
+        if ($_SESSION['id']) {
+            $id = $_SESSION['id'];
             $sql_category = "SELECT * FROM subject WHERE id=$id";
             $res_category = mysqli_fetch_assoc(mysqli_query($con, $sql_category));
         }
@@ -48,7 +50,7 @@ include("../config.php");
 
 // save the data to the database
                 $sql = "UPDATE subject SET subject_name='" . $name . "', subject_title='" . $title . "', subject_metadescription='" . $description . "', subject_text='" . $text . "' where subject.id= $id";
-        $res = mysqli_query($con, $sql);
+                $res = mysqli_query($con, $sql);
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
                 echo 'window.location.href="' . $_SERVER['REQUEST_URI'] . '";';
@@ -78,7 +80,7 @@ include("../config.php");
                         <div class="bread-crumbs"><!-- Breadcrumbs-->
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="news_categories.php">News Categories</a>
+                                    <a href="index.php">News Categories</a>
                                 </li>
                                 <li class="breadcrumb-item active">
                                     Add New Category

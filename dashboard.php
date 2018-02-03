@@ -50,7 +50,7 @@ if (!(isset($_SESSION["login_user"]))) {
                     </li>
                     <li class="nav-item  <?php if ($active == 'users') echo 'active';
         else ''; ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                        <a class="nav-link" href="users/manage_users.php">
+                        <a class="nav-link" href="users/index.php">
                             <i class="fa fa-fw fa-users"></i>
                             <span class="nav-link-text">Manage Users</span>
                         </a>
@@ -65,7 +65,7 @@ if (!(isset($_SESSION["login_user"]))) {
 
                     <li class="nav-item <?php if ($active == 'categories') echo 'active';
         else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="categories/news_categories.php">
+                        <a class="nav-link" href="categories/index.php">
                             <i class="fa fa-fw fa-newspaper-o"></i>
                             <span class="nav-link-text">News Categories</span>
                         </a>
@@ -73,7 +73,7 @@ if (!(isset($_SESSION["login_user"]))) {
 
                     <li class="nav-item <?php if ($active == 'topics') echo 'active';
         else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="topics/news_topics.php">
+                        <a class="nav-link" href="topics/index.php">
                             <i class="fa fa-fw fa-newspaper-o"></i>
                             <span class="nav-link-text">News Topics</span>
                         </a>
@@ -203,7 +203,7 @@ if (!(isset($_SESSION["login_user"]))) {
 
                                 <div class="dashboard-card-btn">
 
-                                    <a class="btn btn-primary" href="users/manage_users.php" id="toggleNavPosition">View Users</a>
+                                    <a class="btn btn-primary" href="users/index.php" id="toggleNavPosition">View Users</a>
                                     <a class="btn btn-primary" href="users/invite_users.php" id="toggleNavPosition">Invite User</a>              </div>
 
 
@@ -245,13 +245,9 @@ if (!(isset($_SESSION["login_user"]))) {
                                 </div>
 
                                 <div class="dashboard-card-btn">
-
-                                    <a class="btn btn-primary" href="categories/news_categories.php" id="toggleNavPosition">View Categories</a>
+                                    <a class="btn btn-primary" href="categories/index.php" id="toggleNavPosition">View Categories</a>
                                     <a class="btn btn-primary" href="categories/add_new_category.php" id="toggleNavPosition">Add Category</a>
                                 </div>
-
-
-
                             </div>
                         </div>
 
@@ -269,7 +265,7 @@ if (!(isset($_SESSION["login_user"]))) {
 
                                 <div class="dashboard-card-btn">
 
-                                    <a class="btn btn-primary" href="topics/news_topics.php" id="toggleNavPosition">View Topics</a>
+                                    <a class="btn btn-primary" href="topics/index.php" id="toggleNavPosition">View Topics</a>
                                     <a class="btn btn-primary" href="topics/add_new_topic.php" id="toggleNavPosition">Add  Topic</a>
                                 </div>
 

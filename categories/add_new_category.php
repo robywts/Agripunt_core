@@ -48,10 +48,10 @@ include("../config.php");
                     or die(mysqli_error($con));
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
-                echo 'window.location.href="news_categories.php";';
+                echo 'window.location.href="index.php";';
                 echo '</script>';
                 echo '<noscript>';
-                echo '<meta http-equiv="refresh" content="0;url=news_categories.php" />';
+                echo '<meta http-equiv="refresh" content="0;url=index.php" />';
                 echo '</noscript>';
 //                header("Location: manage_users.php");
             }
@@ -75,7 +75,7 @@ include("../config.php");
                         <div class="bread-crumbs"><!-- Breadcrumbs-->
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="news_categories.php">News Categories</a>
+                                    <a href="index.php">News Categories</a>
                                 </li>
                                 <li class="breadcrumb-item active">
                                     Add New Category

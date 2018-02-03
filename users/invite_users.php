@@ -26,34 +26,33 @@ include("../config.php");
 
             $status = mysqli_real_escape_string($con, htmlspecialchars($_POST['status']));
 
-            $password = password_hash($_POST['name'].'123', PASSWORD_DEFAULT);
+            $password = password_hash($_POST['name'] . '123', PASSWORD_DEFAULT);
 
-// check to make sure both fields are entered
-
+            $select = mysqli_query($con, "SELECT `email` FROM `users` WHERE `email` = '" . $email . "'") or exit(mysql_error());
             if ($name == '' || $email == '' || $status == '') {
 
-// generate error message
-
                 $error = 'ERROR: Please fill in all required fields!';
+            }
+            else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
+                $error = 'ERROR: Please enter a valid email.';
+            }
 
-
-// if either field is blank, display the form again
-//renderForm($firstname, $lastname, $error);
+            else if ($select && mysqli_num_rows($select) != 0) {
+                $error = 'ERROR: Email Id already exist. Please use another email.';
             } else {
 
-// save the data to the database
                 mysqli_query($con, "INSERT users SET name='$name', email='$email', status='$status', type='2', password='$password'")
 
                     or die(mysqli_error($con));
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
-                echo 'window.location.href="manage_users.php";';
+                echo 'window.location.href="index.php";';
                 echo '</script>';
                 echo '<noscript>';
-                echo '<meta http-equiv="refresh" content="0;url=manage_users.php" />';
+                echo '<meta http-equiv="refresh" content="0;url=index.php" />';
                 echo '</noscript>';
-//                header("Location: manage_users.php");
+//                header("Location: index.php");
             }
         }
 
@@ -77,7 +76,7 @@ include("../config.php");
                         <div class="bread-crumbs"><!-- Breadcrumbs-->
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="manage_users.php">Manage Users</a>
+                                    <a href="index.php">Manage Users</a>
                                 </li>
                                 <li class="breadcrumb-item active">
                                     Invite Users
@@ -93,7 +92,7 @@ include("../config.php");
                 <div class="card mb-3">
                     <div class="card-body">
                         <?php
-                        // if there are any errors, display them
+// if there are any errors, display them
                         if (isset($error) && $error != '') {
 
                             echo '<div style="padding:4px; border:1px solid red; color:red;">' . $error . '</div>';

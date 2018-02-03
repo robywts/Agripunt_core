@@ -110,7 +110,8 @@ if (isset($_POST['search'])) {
                                                 echo "<td>" . $row['file_text'] . "</td>";
                                                 echo "<td>" . $row['file_title'] . "</td>";
                                                 echo "<td>" . $row['count'] . "</td>";
-                                                echo "<td><a href = 'edit_topic.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_topic.php?id=" . $row['id'] . "' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete'>DELETE</a></td>";
+//                                                echo "<td><a href = 'edit_topic.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_topic.php?id=" . $row['id'] . "' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete'>DELETE</a></td>";
+                                                echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='edit_topic.php'><input type='hidden' name='id' value=".$row['id']."><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='delete_topic.php'><input type='hidden' name='id' value=".$row['id']."><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";
                                                 echo "</tr>";
                                             }
                                         } else {

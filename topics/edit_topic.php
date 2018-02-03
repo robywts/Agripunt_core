@@ -15,8 +15,10 @@ include("../config.php");
         <!-- Navigation-->
         <?php
         $active = "topics";
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
+        if (isset($_POST['id']))
+            $_SESSION['id'] = $_POST['id'];
+        if ($_SESSION['id']) {
+            $id = $_SESSION['id'];
             $sql_topic = "SELECT * FROM file WHERE id=$id";
             $res_topic = mysqli_fetch_assoc(mysqli_query($con, $sql_topic));
         }
@@ -79,7 +81,7 @@ include("../config.php");
                         <div class="bread-crumbs"><!-- Breadcrumbs-->
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="news_topics.php">News Topics</a>
+                                    <a href="index.php">News Topics</a>
                                 </li>
                                 <li class="breadcrumb-item active">
                                     Add New Topic
@@ -128,7 +130,7 @@ include("../config.php");
                                     </div>
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Add</span></button>
+                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Update</span></button>
                                         <button type="reset" class="btn btn-warning cancel inlline-block">
 
                                             <span>Cancel</span>

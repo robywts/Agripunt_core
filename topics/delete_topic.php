@@ -18,11 +18,11 @@ include("../config.php");
 
 // check if the 'id' variable is set in URL, and check that it is valid
 
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+if (isset($_POST['id']) && is_numeric($_POST['id'])) {
 
 // get id value
 
-    $id = $_GET['id'];
+    $id = $_POST['id'];
 
 
 
@@ -36,12 +36,12 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
 // redirect back to the view page
 
-    header("Location: news_topics.php");
+    header("Location: index.php");
 } else {
 
 // if id isn't set, or isn't valid, redirect back to view page
 
-    header("Location: news_topics.php");
+    header("Location: index.php");
 }
 
 ?>

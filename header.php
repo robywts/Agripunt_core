@@ -14,7 +14,7 @@
                 </a>
             </li>
             <li class="nav-item  <?php if($active == 'users') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                <a class="nav-link" href="../users/manage_users.php">
+                <a class="nav-link" href="../users/index.php">
                     <i class="fa fa-fw fa-users"></i>
                     <span class="nav-link-text">Manage Users</span>
                 </a>
@@ -27,14 +27,14 @@
             </li>
 
             <li class="nav-item <?php if($active == 'categories') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="../categories/news_categories.php">
+                <a class="nav-link" href="../categories/index.php">
                     <i class="fa fa-fw fa-newspaper-o"></i>
                     <span class="nav-link-text">News Categories</span>
                 </a>
             </li>
 
             <li class="nav-item <?php if($active == 'topics') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="../topics/news_topics.php">
+                <a class="nav-link" href="../topics/index.php">
                     <i class="fa fa-fw fa-newspaper-o"></i>
                     <span class="nav-link-text">News Topics</span>
                 </a>

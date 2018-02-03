@@ -12,8 +12,10 @@ if (isset($_POST['search'])) {
 
     <?php
     $active = "users";
-    if (isset($_GET['id'])) {
-        $id = $_GET['id'];
+    if (isset($_POST['id']))
+        $_SESSION['id'] = $_POST['id'];
+    if ($_SESSION['id']) {
+        $id = $_SESSION['id'];
         $sql_user = "SELECT * FROM users WHERE id=$id";
         $res_user = mysqli_fetch_assoc(mysqli_query($con, $sql_user));
     }
@@ -21,16 +23,15 @@ if (isset($_POST['search'])) {
         $name = $_POST['name'];
         $email = $_POST['email'];
         $status = $_POST['status'];
+
+        $select = mysqli_query($con, "SELECT `email` FROM `users` WHERE `email` = '" . $email . "' AND id!=" . $id) or exit(mysql_error());
         if ($name == '' || $email == '' || $status == '') {
-
-// generate error message
-
             $error = 'ERROR: Please fill in all required fields!';
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
-
-
-// if either field is blank, display the form again
-//renderForm($firstname, $lastname, $error);
+            $error = 'ERROR: Please enter a valid email.';
+        } else if ($select && mysqli_num_rows($select) != 0) {
+            $error = 'ERROR: Email already exist. Please use another email.';
         } else {
 
             $sql = "UPDATE users SET name='" . $name . "', email='" . $email . "', status='" . $status . "' where users.id= $id";
@@ -63,7 +64,7 @@ if (isset($_POST['search'])) {
                         <div class="bread-crumbs"><!-- Breadcrumbs-->
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="manage_users.php">Manage Users</a>
+                                    <a href="index.php">Manage Users</a>
                                 </li>
                                 <li class="breadcrumb-item active">
                                     Edit Users
@@ -80,14 +81,14 @@ if (isset($_POST['search'])) {
                 <div class="card mb-3">
                     <div class="card-body">
 
-                        <?php
-                        // if there are any errors, display them
-                        if (isset($error) && $error != '') {
+<?php
+// if there are any errors, display them
+if (isset($error) && $error != '') {
 
-                            echo '<div style="padding:4px; border:1px solid red; color:red;">' . $error . '</div>';
-                        }
+    echo '<div style="padding:4px; border:1px solid red; color:red;">' . $error . '</div>';
+}
 
-                        ?>
+?>
                         <div class="col-md-12 ">
 
                             <div class="row">
@@ -154,50 +155,50 @@ if (isset($_POST['search'])) {
 
                                                 </tr>
                                                 <tbody id="articleContainer">
-                                                    <?php
-                                                    postlist($id, $con, $name_search = '', $category_search = '', $topic_search = '', $search_all = '');
+<?php
+postlist($id, $con, $name_search = '', $category_search = '', $topic_search = '', $search_all = '');
 
-                                                    function postlist($id, $con, $name_search, $category_search, $topic_search, $search_all)
-                                                    {
-                                                        $conditions = '';
-                                                        if ($name_search != '')
-                                                            $conditions .= " AND article.article_title like '%" . $name_search . "%'";
-                                                        if ($category_search != '')
-                                                            $conditions .= " AND subject_name like '%" . $category_search . "%'";
-                                                        if ($topic_search != '') {
-                                                            $conditions .= " AND file_name like '%" . $topic_search . "%'";
-                                                        }
-                                                        if ($search_all != '')
-                                                            $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR file_name like '%" . $search_all . "%')";
-                                                        $sql_posts = "SELECT article.id,article.article_title, article.article_comment,"
-                                                            . " GROUP_CONCAT(DISTINCT c.company_name SEPARATOR ', ') as company_name,"
-                                                            . " GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subject_name,"
-                                                            . " GROUP_CONCAT(DISTINCT f.file_name SEPARATOR ', ') as topic FROM article  "
-                                                            . "LEFT JOIN article_subject as asu ON asu.article_ID = article.id LEFT JOIN subject as s ON asu.subject_ID = s.id "
-                                                            . "LEFT JOIN article_company as ac ON ac.article_ID = article.id LEFT JOIN company as c ON c.id = ac.company_ID "
-                                                            . "LEFT JOIN article_file as af ON af.article_ID = article.id LEFT JOIN file as f ON af.file_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
+function postlist($id, $con, $name_search, $category_search, $topic_search, $search_all)
+{
+    $conditions = '';
+    if ($name_search != '')
+        $conditions .= " AND article.article_title like '%" . $name_search . "%'";
+    if ($category_search != '')
+        $conditions .= " AND subject_name like '%" . $category_search . "%'";
+    if ($topic_search != '') {
+        $conditions .= " AND file_name like '%" . $topic_search . "%'";
+    }
+    if ($search_all != '')
+        $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR file_name like '%" . $search_all . "%')";
+    $sql_posts = "SELECT article.id,article.article_title, article.article_comment,"
+        . " GROUP_CONCAT(DISTINCT c.company_name SEPARATOR ', ') as company_name,"
+        . " GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subject_name,"
+        . " GROUP_CONCAT(DISTINCT f.file_name SEPARATOR ', ') as topic FROM article  "
+        . "LEFT JOIN article_subject as asu ON asu.article_ID = article.id LEFT JOIN subject as s ON asu.subject_ID = s.id "
+        . "LEFT JOIN article_company as ac ON ac.article_ID = article.id LEFT JOIN company as c ON c.id = ac.company_ID "
+        . "LEFT JOIN article_file as af ON af.article_ID = article.id LEFT JOIN file as f ON af.file_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
 
 //                          echo $sql_posts;exit;
-                                                        $query = mysqli_query($con, $sql_posts);
-                                                        if ($query && mysqli_num_rows($query) != 0) {
-                                                            while ($row = mysqli_fetch_assoc($query)) {
-                                                                $id = $row['id'];
-                                                                echo "<tr class='normalRow'>";
-                                                                echo "<td>" . $row['article_title'] . "</td>";
-                                                                echo "<td>" . $row['subject_name'] . "</td>";
-                                                                echo "<td>" . $row['topic'] . "</td>";
-                                                                echo "<td>" . $row['company_name'] . "</td>";
-                                                                echo "<td>" . $row['article_comment'] . "</td>";
-                                                                echo "<td><a href = 'edit_article.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_article.php?id=" . $row['id'] . "' class = 'btn delete'>DELETE</a></td>";
-                                                                echo "</tr>";
-                                                            }
-                                                        } else {
-                                                            echo "<tr><td colspan='6'><p align='center'>No Results Found.</p></td></tr>";
-                                                        }
-                                                    }
+    $query = mysqli_query($con, $sql_posts);
+    if ($query && mysqli_num_rows($query) != 0) {
+        while ($row = mysqli_fetch_assoc($query)) {
+            $id = $row['id'];
+            echo "<tr class='normalRow'>";
+            echo "<td>" . $row['article_title'] . "</td>";
+            echo "<td>" . $row['subject_name'] . "</td>";
+            echo "<td>" . $row['topic'] . "</td>";
+            echo "<td>" . $row['company_name'] . "</td>";
+            echo "<td>" . $row['article_comment'] . "</td>";
+            echo "<td><a href = 'edit_article.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_article.php?id=" . $row['id'] . "' class = 'btn delete'>DELETE</a></td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='6'><p align='center'>No Results Found.</p></td></tr>";
+    }
+}
 //                                                    $con->close();
 
-                                                    ?>
+?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -220,10 +221,10 @@ if (isset($_POST['search'])) {
                 </div>
             </div>
             <!-- /.container-fluid-->
-            <?php
-            include "../footer.php";
+<?php
+include "../footer.php";
 
-            ?>
+?>
             <script>
                 $(document).ready(function () {
                     $(".table-responsive input").keyup(function () {
