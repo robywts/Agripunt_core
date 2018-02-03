@@ -81,14 +81,14 @@ if (isset($_POST['search'])) {
                 <div class="card mb-3">
                     <div class="card-body">
 
-<?php
+                        <?php
 // if there are any errors, display them
-if (isset($error) && $error != '') {
+                        if (isset($error) && $error != '') {
 
-    echo '<div style="padding:4px; border:1px solid red; color:red;">' . $error . '</div>';
-}
+                            echo '<div style="padding:4px; border:1px solid red; color:red;">' . $error . '</div>';
+                        }
 
-?>
+                        ?>
                         <div class="col-md-12 ">
 
                             <div class="row">
@@ -96,8 +96,8 @@ if (isset($error) && $error != '') {
                                 <div class="container pr0 mb15 pb10 border-bottom">
                                     <div class="col-sm-12 col-md-12 float-right text-right pr0">
 
-
-                                        <a class="btn delete table-top-btn delete-item" onClick="return confirm('Are you sure you want to delete this?');" href='delete.php?id=<?php echo $id ?>'>Delete User</a>
+                                        
+                                                                                <!--<a class="btn delete table-top-btn delete-item" onClick="return confirm('Are you sure you want to delete this?');" href='delete.php?id=<?php echo $id ?>'>Delete User</a>-->
                                     </div>
 
                                 </div>
@@ -155,50 +155,50 @@ if (isset($error) && $error != '') {
 
                                                 </tr>
                                                 <tbody id="articleContainer">
-<?php
-postlist($id, $con, $name_search = '', $category_search = '', $topic_search = '', $search_all = '');
+                                                    <?php
+                                                    postlist($id, $con, $name_search = '', $category_search = '', $topic_search = '', $search_all = '');
 
-function postlist($id, $con, $name_search, $category_search, $topic_search, $search_all)
-{
-    $conditions = '';
-    if ($name_search != '')
-        $conditions .= " AND article.article_title like '%" . $name_search . "%'";
-    if ($category_search != '')
-        $conditions .= " AND subject_name like '%" . $category_search . "%'";
-    if ($topic_search != '') {
-        $conditions .= " AND file_name like '%" . $topic_search . "%'";
-    }
-    if ($search_all != '')
-        $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR file_name like '%" . $search_all . "%')";
-    $sql_posts = "SELECT article.id,article.article_title, article.article_comment,"
-        . " GROUP_CONCAT(DISTINCT c.company_name SEPARATOR ', ') as company_name,"
-        . " GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subject_name,"
-        . " GROUP_CONCAT(DISTINCT f.file_name SEPARATOR ', ') as topic FROM article  "
-        . "LEFT JOIN article_subject as asu ON asu.article_ID = article.id LEFT JOIN subject as s ON asu.subject_ID = s.id "
-        . "LEFT JOIN article_company as ac ON ac.article_ID = article.id LEFT JOIN company as c ON c.id = ac.company_ID "
-        . "LEFT JOIN article_file as af ON af.article_ID = article.id LEFT JOIN file as f ON af.file_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
+                                                    function postlist($id, $con, $name_search, $category_search, $topic_search, $search_all)
+                                                    {
+                                                        $conditions = '';
+                                                        if ($name_search != '')
+                                                            $conditions .= " AND article.article_title like '%" . $name_search . "%'";
+                                                        if ($category_search != '')
+                                                            $conditions .= " AND subject_name like '%" . $category_search . "%'";
+                                                        if ($topic_search != '') {
+                                                            $conditions .= " AND file_name like '%" . $topic_search . "%'";
+                                                        }
+                                                        if ($search_all != '')
+                                                            $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR file_name like '%" . $search_all . "%')";
+                                                        $sql_posts = "SELECT article.id,article.article_title, article.article_comment,"
+                                                            . " GROUP_CONCAT(DISTINCT c.company_name SEPARATOR ', ') as company_name,"
+                                                            . " GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subject_name,"
+                                                            . " GROUP_CONCAT(DISTINCT f.file_name SEPARATOR ', ') as topic FROM article  "
+                                                            . "LEFT JOIN article_subject as asu ON asu.article_ID = article.id LEFT JOIN subject as s ON asu.subject_ID = s.id "
+                                                            . "LEFT JOIN article_company as ac ON ac.article_ID = article.id LEFT JOIN company as c ON c.id = ac.company_ID "
+                                                            . "LEFT JOIN article_file as af ON af.article_ID = article.id LEFT JOIN file as f ON af.file_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
 
 //                          echo $sql_posts;exit;
-    $query = mysqli_query($con, $sql_posts);
-    if ($query && mysqli_num_rows($query) != 0) {
-        while ($row = mysqli_fetch_assoc($query)) {
-            $id = $row['id'];
-            echo "<tr class='normalRow'>";
-            echo "<td>" . $row['article_title'] . "</td>";
-            echo "<td>" . $row['subject_name'] . "</td>";
-            echo "<td>" . $row['topic'] . "</td>";
-            echo "<td>" . $row['company_name'] . "</td>";
-            echo "<td>" . $row['article_comment'] . "</td>";
-            echo "<td><a href = 'edit_article.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_article.php?id=" . $row['id'] . "' class = 'btn delete'>DELETE</a></td>";
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='6'><p align='center'>No Results Found.</p></td></tr>";
-    }
-}
+                                                        $query = mysqli_query($con, $sql_posts);
+                                                        if ($query && mysqli_num_rows($query) != 0) {
+                                                            while ($row = mysqli_fetch_assoc($query)) {
+                                                                $id = $row['id'];
+                                                                echo "<tr class='normalRow'>";
+                                                                echo "<td>" . $row['article_title'] . "</td>";
+                                                                echo "<td>" . $row['subject_name'] . "</td>";
+                                                                echo "<td>" . $row['topic'] . "</td>";
+                                                                echo "<td>" . $row['company_name'] . "</td>";
+                                                                echo "<td>" . $row['article_comment'] . "</td>";
+                                                                echo "<td><a href = 'edit_article.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_article.php?id=" . $row['id'] . "' class = 'btn delete'>DELETE</a></td>";
+                                                                echo "</tr>";
+                                                            }
+                                                        } else {
+                                                            echo "<tr><td colspan='6'><p align='center'>No Results Found.</p></td></tr>";
+                                                        }
+                                                    }
 //                                                    $con->close();
 
-?>
+                                                    ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -221,10 +221,10 @@ function postlist($id, $con, $name_search, $category_search, $topic_search, $sea
                 </div>
             </div>
             <!-- /.container-fluid-->
-<?php
-include "../footer.php";
+            <?php
+            include "../footer.php";
 
-?>
+            ?>
             <script>
                 $(document).ready(function () {
                     $(".table-responsive input").keyup(function () {
