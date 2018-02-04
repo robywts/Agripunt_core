@@ -2,6 +2,7 @@
 include "../control.inc";
 include("../config.php");
 if (isset($_POST['search'])) {
+    unset($_SESSION['condition']);
     file_list($con, $_POST['name'], $_POST['desc'], $_POST['text'], $_POST['searchAll']);
     return true;
 }
@@ -56,8 +57,8 @@ if (isset($_POST['search'])) {
                                 </div>
 
                             </div>
-                            <table class="table table-bordered scrollTable" id="dataTables-example3" width="100%" cellspacing="0">
-                                <thead class="fixedHeader">
+                            <table class="table table-bordered" id="dataTables-example3" width="100%" cellspacing="0">
+                                <thead>
                                     <tr>
                                         <th>Topic  Name</th>
                                         <th>Meta Description</th>
@@ -73,19 +74,21 @@ if (isset($_POST['search'])) {
                                 <tr class="table-search">
                                     <td><label><input type="search" class="form-control form-control-sm" id="name_search" placeholder="Search By Topic Name" aria-controls="dataTables-example"></label></td>
 
-                                     <td><label><input type="search" class="form-control form-control-sm" id="desc_search"  placeholder="Search By Meta Description" aria-controls="dataTables-example"></label></td>
+                                    <td><label><input type="search" class="form-control form-control-sm" id="desc_search"  placeholder="Search By Meta Description" aria-controls="dataTables-example"></label></td>
                                     <td><label><input type="search" class="form-control form-control-sm" id="text_search"  placeholder="Search By Topic Text" aria-controls="dataTables-example"></label></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
-                                <tbody id="tableDatContainer" class="scrollContent">
+                                <tbody id="tableDatContainer">
                                     <?php
                                     file_list($con, $name_search = '', $desc_search = '', $text_search = '', $search_all = '');
 
                                     function file_list($con, $name_search, $desc_search = '', $text_search = '', $search_all)
                                     {
                                         $condition = '';
+                                        if (isset($_SESSION['condition']) && isset($_GET['currentpage']))
+                                            $condition = $_SESSION['condition'];
                                         if ($name_search != '')
                                             $condition .= " AND f.file_name like '%" . $name_search . "%'";
                                         if ($desc_search != '')
@@ -94,10 +97,44 @@ if (isset($_POST['search'])) {
                                             $condition .= " AND f.file_text like '%" . $text_search . "%'";
                                         if ($search_all != '')
                                             $condition .= " AND (f.file_name like '%" . $search_all . "%' OR f.file_metadescription like '%" . $search_all . "%' OR f.file_text like '%" . $search_all . "%')";
+
+                                        $_SESSION['condition'] = $condition;
+                                        $sqll = "SELECT COUNT(*) FROM file as f where 1=1 $condition";
+                                        $result = mysqli_query($con, $sqll);
+                                        $r = mysqli_fetch_row($result);
+                                        $numrows = $r[0];
+// number of rows to show per page
+                                        $rowsperpage = 20;
+// find out total pages
+                                        $totalpages = ceil($numrows / $rowsperpage);
+
+// get the current page or set a default
+                                        if (isset($_GET['currentpage']) && is_numeric($_GET['currentpage'])) {
+                                            // cast var as int
+                                            $currentpage = (int) $_GET['currentpage'];
+                                        } else {
+                                            // default page num
+                                            $currentpage = 1;
+                                        } // end if
+// if current page is greater than total pages...
+                                        if ($currentpage > $totalpages) {
+                                            // set current page to last page
+                                            $currentpage = $totalpages;
+                                        } // end if
+// if current page is less than first page...
+                                        if ($currentpage < 1) {
+                                            // set current page to first page
+                                            $currentpage = 1;
+                                        } // end if
+// the offset of the list, based on current page 
+                                        $offset = ($currentpage - 1) * $rowsperpage;
+
+                                        //pagination end
+
                                         $sql = "SELECT f.id, f.file_name, f.file_metadescription, f.file_title, f.file_text, (SELECT COUNT(1) AS other FROM article_file as aff 
     where aff.file_ID = afi.file_ID GROUP BY aff.file_ID) as count FROM file as f Left JOIN article_file as afi
     ON f.id = afi.file_ID where 1=1" . $condition . " GROUP BY f.id";
-
+                                        $sql .= " LIMIT $offset, $rowsperpage";
 
 //                                        echo $sql;
                                         $query = mysqli_query($con, $sql);
@@ -111,11 +148,52 @@ if (isset($_POST['search'])) {
                                                 echo "<td>" . $row['file_title'] . "</td>";
                                                 echo "<td>" . $row['count'] . "</td>";
 //                                                echo "<td><a href = 'edit_topic.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_topic.php?id=" . $row['id'] . "' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete'>DELETE</a></td>";
-                                                echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='edit_topic.php'><input type='hidden' name='id' value=".$row['id']."><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='delete_topic.php'><input type='hidden' name='id' value=".$row['id']."><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";
+                                                echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='edit_topic.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='delete_topic.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";
                                                 echo "</tr>";
                                             }
+                                            /*                                             * ****  build the pagination links ***** */
+// range of num links to show
+                                            $range = 3;
+
+// if not on page 1, don't show back links
+                                            echo "<tr><td style='text-align:right;margin: 0px;border:1px solid white;' colspan='6'>";
+                                            if ($currentpage > 1) {
+                                                // show << link to go back to page 1
+
+                                                echo " <a href='{$_SERVER['PHP_SELF']}?currentpage=1'><b><<  </b></a> ";
+                                                // get previous page num
+                                                $prevpage = $currentpage - 1;
+                                                // show < link to go back to 1 page
+                                                echo " <a href='{$_SERVER['PHP_SELF']}?currentpage=$prevpage'>< </a> ";
+                                            } // end if 
+// loop to show links to range of pages around current page
+                                            for ($x = ($currentpage - $range); $x < (($currentpage + $range) + 1); $x++) {
+                                                // if it's a valid page number...
+                                                if (($x > 0) && ($x <= $totalpages)) {
+                                                    // if we're on current page...
+                                                    if ($x == $currentpage) {
+                                                        // 'highlight' it but don't make a link
+                                                        echo " <b>[ $x ]</b> ";
+                                                        // if not current page...
+                                                    } else {
+                                                        // make it a link
+                                                        echo " <a href='{$_SERVER['PHP_SELF']}?currentpage=$x'> $x </a> ";
+                                                    } // end else
+                                                } // end if 
+                                            } // end for
+// if not on last page, show forward and last page links        
+                                            if ($currentpage != $totalpages) {
+                                                // get next page
+                                                $nextpage = $currentpage + 1;
+                                                // echo forward link for next page 
+                                                echo " <a href='{$_SERVER['PHP_SELF']}?currentpage=$nextpage'> > </a> ";
+                                                // echo forward link for lastpage
+                                                echo " <a href='{$_SERVER['PHP_SELF']}?currentpage=$totalpages'> <b> >></b></a> ";
+                                            } // end if
+                                            /*                                             * **** end build pagination links ***** */
+                                            echo "</td><tr>";
                                         } else {
-                                            echo "<p align='center'>No Results Found.</p>";
+                                            echo "<td colspan='6'><p align='center'>No Results Found.</p></td>";
                                         }
                                     }
                                     $con->close();
@@ -156,88 +234,3 @@ if (isset($_POST['search'])) {
         });
     });
 </script>
-<style>
-
-
-    html>body tbody.scrollContent {
-        display: block;
-        height: 362px;
-        overflow: auto;
-        width: 100%
-    }
-
-
-    html>body thead.fixedHeader tr {
-        display: block
-    }
-
-    html>body thead.fixedHeader th { /* TH 1 */
-        width: 200px  
-    }
-
-    html>body thead.fixedHeader th + th { /* TH 2 */
-        width: 200px  
-    }
-
-    html>body thead.fixedHeader th + th + th { /* TH 3 +16px for scrollbar */
-        width: 210px  
-    }
-    html>body thead.fixedHeader th + th + th + th { /* TH 3 +16px for scrollbar */
-        width: 150px  
-    }
-
-    html>body thead.fixedHeader th + th + th + th + th { /* TH 3 +16px for scrollbar */
-        width: 65px  
-    }
-
-    html>body thead.fixedHeader th + th + th + th + th + th { /* TH 3 +16px for scrollbar */
-        width: 201px  
-    }
-    html>body tr.table-search  {
-        display: block
-    }
-
-    html>body tr.table-search td { /* TH 1 */
-        width: 200px  
-    }
-
-    html>body tr.table-search td + td { /* TH 2 */
-        width: 200px  
-    }
-
-    html>body tr.table-search td + td + td { /* TH 3 +16px for scrollbar */
-        width: 210px  
-    }
-
-    html>body tr.table-search td + td + td + td { /* TH 3 +16px for scrollbar */
-        width: 150px  
-    }
-    html>body tr.table-search td + td + td + td + td { /* TH 3 +16px for scrollbar */
-        width: 65px  
-    }
-    html>body tr.table-search td + td + td + td + td + td{ /* TH 3 +16px for scrollbar */
-        width: 201px  
-    }
-    html>body tbody.scrollContent td { /* TD 1 */
-        width: 200px  
-    }
-
-    html>body tbody.scrollContent td + td { /* TD 2 */
-        width: 200px  
-    }
-
-    html>body tbody.scrollContent td + td + td { /* TD 3 +16px for scrollbar */
-        width: 210px  
-    }
-
-    html>body tbody.scrollContent td + td + td + td { /* TD 3 +16px for scrollbar */
-        width: 150px  
-    }
-    html>body tbody.scrollContent td + td + td + td + td { /* TD 3 +16px for scrollbar */
-        width: 65px  
-    }
-
-    html>body tbody.scrollContent td + td + td + td + td + td { /* TD 3 +16px for scrollbar */
-        width: 185px  
-    }
-</style>
