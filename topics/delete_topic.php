@@ -28,7 +28,7 @@ if (isset($_POST['id']) && is_numeric($_POST['id'])) {
 
 // delete the entry
 
-    $result = mysqli_query($con, "DELETE FROM file WHERE id=$id")
+    $result = mysqli_query($con, "DELETE FROM topic WHERE id=$id")
 
         or die(mysqli_error());
 

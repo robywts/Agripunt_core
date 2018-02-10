@@ -1,3 +1,8 @@
+<?php
+$admin_user = "SELECT * FROM users WHERE type=1";
+$res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
+
+?>
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-white fixed-top" id="mainNav">
     <a class="navbar-brand desktop" href="index.html"><img src="../images/logo.png"></a>
@@ -48,8 +53,9 @@
                 </a>
             </li>
 
-            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="newsletter_subscribers.html">
+            <li class="nav-item <?php if ($active == 'subscribers') echo 'active';
+        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                <a class="nav-link" href="../subscribers/index.php">
                     <i class="fa fa-fw fa-envelope-open"></i>
                     <span class="nav-link-text">Newletter Subscribers</span>
                 </a>
@@ -62,7 +68,7 @@
             </li>
 
             <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="settings.html">
+                <a class="nav-link <?php if($active == 'settings') echo 'active'; else ''; ?>" href="../settings.php">
                     <i class="fa fa-fw fa-cog"></i>
                     <span class="nav-link-text">Settings</span>
                 </a>
@@ -82,10 +88,10 @@
 
             </li>
             <li class="mr15">
-                <a class="btn btn-primary btn-block" href="invite_users.php">Invite Users</a>
+                <a class="btn btn-primary btn-block" href="users/invite_users.php">Invite Users</a>
             </li>
             <li class="">
-                <a class="avtar" href="../logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown"><img src="../images/user.png"> Admin-logout  <i class="fa fa-fw fa-caret-down"></i></a>
+                <a class="avtar" href="../logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown"><img src="../uploads/<?php echo $res_user['image_url']; ?>"> Admin-logout  <i class="fa fa-fw fa-caret-down"></i></a>
                 <div class="dropdown-menu show" aria-labelledby="alertsDropdown" style="display:none;">
                     <h6 class="dropdown-header">New Alerts:</h6>
                     <div class="dropdown-divider"></div>

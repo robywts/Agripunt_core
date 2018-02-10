@@ -1,11 +1,7 @@
 <?php
-session_start();
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
-if (!(isset($_SESSION["login_user"]))) {
-    header("Location: index.php");
-}
 
+include "control.inc";
+include("config.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +26,8 @@ if (!(isset($_SESSION["login_user"]))) {
     <body class="fixed-nav sticky-footer bg-dark" id="page-top">
         <?php
         $active = 'dashboard';
+        $admin_user = "SELECT * FROM users WHERE type=1";
+        $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
 
         ?>
         <!-- Navigation-->
@@ -88,8 +86,9 @@ if (!(isset($_SESSION["login_user"]))) {
                         </a>
                     </li>
 
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="newsletter_subscribers.html">
+                    <li class="nav-item <?php if ($active == 'subscribers') echo 'active';
+        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                        <a class="nav-link" href="subscribers/index.php">
                             <i class="fa fa-fw fa-envelope-open"></i>
                             <span class="nav-link-text">Newletter Subscribers</span>
                         </a>
@@ -102,7 +101,7 @@ if (!(isset($_SESSION["login_user"]))) {
                     </li>
 
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="settings.html">
+                        <a class="nav-link <?php if($active == 'settings') echo 'active'; else ''; ?>" href="settings.php">
                             <i class="fa fa-fw fa-cog"></i>
                             <span class="nav-link-text">Settings</span>
                         </a>
@@ -122,10 +121,10 @@ if (!(isset($_SESSION["login_user"]))) {
 
                     </li>
                     <li class="mr15">
-                        <a class="btn btn-primary btn-block" href="invite_users.php">Invite Users</a>
+                        <a class="btn btn-primary btn-block" href="users/invite_users.php">Invite Users</a>
                     </li>
                     <li class="">
-                        <a class="avtar" href="logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown"><img src="images/user.png"> Admin-logout  <i class="fa fa-fw fa-caret-down"></i></a>
+                        <a class="avtar" href="logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown"><img src="uploads/<?php echo $res_user['image_url']; ?>"> Admin-logout  <i class="fa fa-fw fa-caret-down"></i></a>
                         <div class="dropdown-menu show" aria-labelledby="alertsDropdown" style="display:none;">
                             <h6 class="dropdown-header">New Alerts:</h6>
                             <div class="dropdown-divider"></div>
@@ -310,7 +309,7 @@ if (!(isset($_SESSION["login_user"]))) {
 
                                 <div class="dashboard-card-btn">
 
-                                    <a class="btn btn-primary" href="newsletter_subscribers.html" id="toggleNavPosition">View Subscribers</a>
+                                    <a class="btn btn-primary" href="subscribers/index.php" id="toggleNavPosition">View Subscribers</a>
 
                                 </div>
 

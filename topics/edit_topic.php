@@ -19,18 +19,18 @@ include("../config.php");
             $_SESSION['id'] = $_POST['id'];
         if ($_SESSION['id']) {
             $id = $_SESSION['id'];
-            $sql_topic = "SELECT * FROM file WHERE id=$id";
+            $sql_topic = "SELECT * FROM topic WHERE id=$id";
             $res_topic = mysqli_fetch_assoc(mysqli_query($con, $sql_topic));
         }
         if (isset($_POST['submit'])) {
 // get form data, making sure it is valid
-            $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_name']));
+            $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_name']));
 
-            $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_title']));
+            $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_title']));
 
-            $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_metadescription']));
+            $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_metadescription']));
 
-            $text = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_text']));
+            $text = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_text']));
 
 
 
@@ -49,7 +49,7 @@ include("../config.php");
             } else {
 
 // save the data to the database
-                $sql = "UPDATE file SET file_name='" . $name . "', file_title='" . $title . "', file_metadescription='" . $description . "', file_text='" . $text . "' where file.id= $id";
+                $sql = "UPDATE topic SET topic_name='" . $name . "', topic_title='" . $title . "', topic_metadescription='" . $description . "', topic_text='" . $text . "' where topic.id= $id";
                 $res = mysqli_query($con, $sql);
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
@@ -114,19 +114,19 @@ include("../config.php");
                                 <form id="topicAdd" method="POST">
                                     <div class="form-group">
                                         <label class="field-title">Topic Name *</label>
-                                        <input type="text" value="<?php echo $res_topic['file_name']; ?>" name="file_name" placeholder="Topic Name" class="common-input">
+                                        <input type="text" value="<?php echo $res_topic['topic_name']; ?>" name="topic_name" placeholder="Topic Name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Meta Description</label>
-                                        <textarea name="file_metadescription" class="text-area"><?php echo $res_topic['file_metadescription']; ?></textarea>
+                                        <textarea name="topic_metadescription" class="text-area"><?php echo $res_topic['topic_metadescription']; ?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Topic Text</label>
-                                        <textarea  name="file_text" class="text-area"><?php echo $res_topic['file_text']; ?></textarea>
+                                        <textarea  name="topic_text" class="text-area"><?php echo $res_topic['topic_text']; ?></textarea>
                                     </div>
                                     <div class="title-field form-group">
                                         <label>Topic Title *</label>
-                                        <input value="<?php echo $res_topic['file_title']; ?>" type="text" name="file_title" placeholder="Topic Title">
+                                        <input value="<?php echo $res_topic['topic_title']; ?>" type="text" name="topic_title" placeholder="Topic Title">
                                     </div>
                                     <div class="button-group">
 

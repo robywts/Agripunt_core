@@ -1,2 +1,18 @@
-03-Feb-2018
+**********03-Feb-2018***********
 ALTER TABLE `subject` CHANGE `subject_text` `subject_text` VARCHAR(200) NULL DEFAULT NULL;
+**********04-Feb-2018************
+ALTER TABLE `users` ADD `image_url` VARCHAR(250) NOT NULL AFTER `email`;
+**********10-feb-2018************
+DROP TABLE IF EXISTS `subscribers`;
+CREATE TABLE IF NOT EXISTS `subscribers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `subscribed_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+INSERT INTO `subscribers` (`id`, `name`, `email`, `subscribed_date`) VALUES
+(1, 'jojo', 'jojo@agripunt.com', '2018-02-09 04:00:00'),
+(2, 'rj', 'rj@agripunt.com', '2018-02-08 00:00:00');
+COMMIT;

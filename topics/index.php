@@ -3,7 +3,7 @@ include "../control.inc";
 include("../config.php");
 if (isset($_POST['search'])) {
     unset($_SESSION['condition']);
-    file_list($con, $_POST['name'], $_POST['desc'], $_POST['text'], $_POST['searchAll']);
+    topic_list($con, $_POST['name'], $_POST['desc'], $_POST['text'], $_POST['searchAll']);
     return true;
 }
 
@@ -82,24 +82,24 @@ if (isset($_POST['search'])) {
                                 </tr>
                                 <tbody id="tableDatContainer">
                                     <?php
-                                    file_list($con, $name_search = '', $desc_search = '', $text_search = '', $search_all = '');
+                                    topic_list($con, $name_search = '', $desc_search = '', $text_search = '', $search_all = '');
 
-                                    function file_list($con, $name_search, $desc_search = '', $text_search = '', $search_all)
+                                    function topic_list($con, $name_search, $desc_search = '', $text_search = '', $search_all)
                                     {
                                         $condition = '';
                                         if (isset($_SESSION['condition']) && isset($_GET['currentpage']))
                                             $condition = $_SESSION['condition'];
                                         if ($name_search != '')
-                                            $condition .= " AND f.file_name like '%" . $name_search . "%'";
+                                            $condition .= " AND f.topic_name like '%" . $name_search . "%'";
                                         if ($desc_search != '')
-                                            $condition .= " AND f.file_metadescription like '%" . $desc_search . "%'";
+                                            $condition .= " AND f.topic_metadescription like '%" . $desc_search . "%'";
                                         if ($text_search != '')
-                                            $condition .= " AND f.file_text like '%" . $text_search . "%'";
+                                            $condition .= " AND f.topic_text like '%" . $text_search . "%'";
                                         if ($search_all != '')
-                                            $condition .= " AND (f.file_name like '%" . $search_all . "%' OR f.file_metadescription like '%" . $search_all . "%' OR f.file_text like '%" . $search_all . "%')";
+                                            $condition .= " AND (f.topic_name like '%" . $search_all . "%' OR f.topic_metadescription like '%" . $search_all . "%' OR f.topic_text like '%" . $search_all . "%')";
 
                                         $_SESSION['condition'] = $condition;
-                                        $sqll = "SELECT COUNT(*) FROM file as f where 1=1 $condition";
+                                        $sqll = "SELECT COUNT(*) FROM topic as f where 1=1 $condition";
                                         $result = mysqli_query($con, $sqll);
                                         $r = mysqli_fetch_row($result);
                                         $numrows = $r[0];
@@ -131,9 +131,9 @@ if (isset($_POST['search'])) {
 
                                         //pagination end
 
-                                        $sql = "SELECT f.id, f.file_name, f.file_metadescription, f.file_title, f.file_text, (SELECT COUNT(1) AS other FROM article_file as aff 
-    where aff.file_ID = afi.file_ID GROUP BY aff.file_ID) as count FROM file as f Left JOIN article_file as afi
-    ON f.id = afi.file_ID where 1=1" . $condition . " GROUP BY f.id";
+                                        $sql = "SELECT f.id, f.topic_name, f.topic_metadescription, f.topic_title, f.topic_text, (SELECT COUNT(1) AS other FROM article_topic as aff 
+    where aff.topic_ID = afi.topic_ID GROUP BY aff.topic_ID) as count FROM topic as f Left JOIN article_topic as afi
+    ON f.id = afi.topic_ID where 1=1" . $condition . " GROUP BY f.id";
                                         $sql .= " LIMIT $offset, $rowsperpage";
 
 //                                        echo $sql;
@@ -142,10 +142,10 @@ if (isset($_POST['search'])) {
                                             while ($row = mysqli_fetch_assoc($query)) {
                                                 $id = $row['id'];
                                                 echo "<tr class='normalRow'>";
-                                                echo "<td>" . $row['file_name'] . "</td>";
-                                                echo "<td>" . $row['file_metadescription'] . "</td>";
-                                                echo "<td>" . $row['file_text'] . "</td>";
-                                                echo "<td>" . $row['file_title'] . "</td>";
+                                                echo "<td>" . $row['topic_name'] . "</td>";
+                                                echo "<td>" . $row['topic_metadescription'] . "</td>";
+                                                echo "<td>" . $row['topic_text'] . "</td>";
+                                                echo "<td>" . $row['topic_title'] . "</td>";
                                                 echo "<td>" . $row['count'] . "</td>";
 //                                                echo "<td><a href = 'edit_topic.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_topic.php?id=" . $row['id'] . "' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete'>DELETE</a></td>";
                                                 echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='edit_topic.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='delete_topic.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";

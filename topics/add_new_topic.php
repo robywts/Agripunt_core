@@ -18,13 +18,13 @@ include("../config.php");
 
         if (isset($_POST['submit'])) {
 // get form data, making sure it is valid
-            $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_name']));
+            $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_name']));
 
-            $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_title']));
+            $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_title']));
 
-            $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_metadescription']));
+            $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_metadescription']));
 
-            $text = mysqli_real_escape_string($con, htmlspecialchars($_POST['file_text']));
+            $text = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_text']));
 
 
 
@@ -43,7 +43,7 @@ include("../config.php");
             } else {
 
 // save the data to the database
-                mysqli_query($con, "INSERT file SET file_name='$name', file_title='$title', file_metadescription='$description', file_text='$text'")
+                mysqli_query($con, "INSERT topic SET topic_name='$name', topic_title='$title', topic_metadescription='$description', topic_text='$text'")
 
                     or die(mysqli_error($con));
 // once saved, redirect back to the view page
@@ -108,19 +108,19 @@ include("../config.php");
                                 <form id="topicAdd" method="POST">
                                     <div class="form-group">
                                         <label class="field-title">Topic Nam *</label>
-                                        <input type="text" name="file_name" placeholder="Topic Name" class="common-input">
+                                        <input type="text" name="topic_name" placeholder="Topic Name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Meta Description</label>
-                                        <textarea name="file_metadescription" class="text-area"></textarea>
+                                        <textarea name="topic_metadescription" class="text-area"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Topic Text</label>
-                                        <textarea  name="file_text" class="text-area"></textarea>
+                                        <textarea  name="topic_text" class="text-area"></textarea>
                                     </div>
                                     <div class="title-field form-group">
                                         <label>Topic Title *</label>
-                                        <input type="text" name="file_title" placeholder="Topic Title">
+                                        <input type="text" name="topic_title" placeholder="Topic Title">
                                     </div>
                                     <div class="button-group">
 
