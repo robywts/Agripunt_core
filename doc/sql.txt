@@ -16,3 +16,5 @@ INSERT INTO `subscribers` (`id`, `name`, `email`, `subscribed_date`) VALUES
 (1, 'jojo', 'jojo@agripunt.com', '2018-02-09 04:00:00'),
 (2, 'rj', 'rj@agripunt.com', '2018-02-08 00:00:00');
 COMMIT;
+**********13-feb-2018************
+ALTER TABLE `rssfeed` ADD `rss_name` VARCHAR(250) NOT NULL DEFAULT 'Not Available' AFTER `company_ID`;

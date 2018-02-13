@@ -141,7 +141,7 @@ include("config.php");
                         '';
 
                     ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="rss_feeds.html">
+                        <a class="nav-link" href="rssFeeds/index.php">
                             <i class="fa fa-fw fa-rss-square"></i>
                             <span class="nav-link-text">RSS Feeds</span>
                         </a>

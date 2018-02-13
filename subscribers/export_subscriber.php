@@ -13,7 +13,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment;filename="subscribers.xls"');
+header('Content-Disposition: attachment;filename="subscribers.xlsx"');
 header('Cache-Control: max-age=0');
 
 if (isset($_POST)) {
