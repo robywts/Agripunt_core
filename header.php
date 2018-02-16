@@ -60,8 +60,9 @@ $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
                     <span class="nav-link-text">Newletter Subscribers</span>
                 </a>
             </li>
-            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="companies.html">
+            <li class="nav-item <?php if ($active == 'companies') echo 'active';
+        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                <a class="nav-link" href="../companies/index.php">
                     <i class="fa fa-fw fa-building"></i>
                     <span class="nav-link-text">Companies</span>
                 </a>
@@ -84,11 +85,11 @@ $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-            <li class="mr15"><a class="btn btn-primary btn-block " href="add_new_post.html">Add New Post</a>
+            <li class="mr15"><a class="btn btn-primary btn-block " href="../post/add_new_post.php">Add New Post</a>
 
             </li>
             <li class="mr15">
-                <a class="btn btn-primary btn-block" href="users/invite_users.php">Invite Users</a>
+                <a class="btn btn-primary btn-block" href="../users/invite_users.php">Invite Users</a>
             </li>
             <li class="">
                 <a class="avtar" href="../logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown"><img src="../uploads/<?php echo $res_user['image_url']; ?>"> Admin-logout  <i class="fa fa-fw fa-caret-down"></i></a>

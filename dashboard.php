@@ -1,7 +1,7 @@
 <?php
-
 include "control.inc";
 include("config.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,38 +39,63 @@ include("config.php");
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-                    <li class="nav-item <?php if ($active == 'dashboard') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <li class="nav-item <?php
+                    if ($active == 'dashboard')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
                         <a class="nav-link" href="dashboard.php">
                             <i class="fa fa-fw fa-dashboard"></i>
                             <span class="nav-link-text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="nav-item  <?php if ($active == 'users') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <li class="nav-item  <?php
+                    if ($active == 'users')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
                         <a class="nav-link" href="users/index.php">
                             <i class="fa fa-fw fa-users"></i>
                             <span class="nav-link-text">Manage Users</span>
                         </a>
                     </li>
-                    <li class="nav-item <?php if ($active == 'posts') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Charts">
+                    <li class="nav-item <?php
+                    if ($active == 'posts')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Charts">
                         <a class="nav-link" href="manage_posts.html">
                             <i class="fa fa-fw fa-sticky-note"></i>
                             <span class="nav-link-text">Manage Posts</span>
                         </a>
                     </li>
 
-                    <li class="nav-item <?php if ($active == 'categories') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <li class="nav-item <?php
+                    if ($active == 'categories')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
                         <a class="nav-link" href="categories/index.php">
                             <i class="fa fa-fw fa-newspaper-o"></i>
                             <span class="nav-link-text">News Categories</span>
                         </a>
                     </li>
 
-                    <li class="nav-item <?php if ($active == 'topics') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <li class="nav-item <?php
+                    if ($active == 'topics')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
                         <a class="nav-link" href="topics/index.php">
                             <i class="fa fa-fw fa-newspaper-o"></i>
                             <span class="nav-link-text">News Topics</span>
@@ -78,30 +103,52 @@ include("config.php");
                     </li>
 
 
-                    <li class="nav-item <?php if ($active == 'rssfeeds') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <li class="nav-item <?php
+                    if ($active == 'rssfeeds')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
                         <a class="nav-link" href="rssFeeds/index.php">
                             <i class="fa fa-fw fa-rss-square"></i>
                             <span class="nav-link-text">RSS Feeds</span>
                         </a>
                     </li>
 
-                    <li class="nav-item <?php if ($active == 'subscribers') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <li class="nav-item <?php
+                    if ($active == 'subscribers')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
                         <a class="nav-link" href="subscribers/index.php">
                             <i class="fa fa-fw fa-envelope-open"></i>
                             <span class="nav-link-text">Newletter Subscribers</span>
                         </a>
                     </li>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="companies.html">
+                    <li class="nav-item <?php
+                    if ($active == 'companies')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                        <a class="nav-link" href="companies/index.php">
                             <i class="fa fa-fw fa-building"></i>
                             <span class="nav-link-text">Companies</span>
                         </a>
                     </li>
 
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link <?php if($active == 'settings') echo 'active'; else ''; ?>" href="settings.php">
+                        <a class="nav-link <?php
+                        if ($active == 'settings')
+                            echo 'active';
+                        else
+                            '';
+
+                        ?>" href="settings.php">
                             <i class="fa fa-fw fa-cog"></i>
                             <span class="nav-link-text">Settings</span>
                         </a>
@@ -331,8 +378,8 @@ include("config.php");
 
                                 <div class="dashboard-card-btn">
 
-                                    <a class="btn btn-primary" href="companies.html" id="toggleNavPosition">View Companies</a>
-                                    <a class="btn btn-primary" href="add_new_company.html" id="toggleNavPosition">Add Company</a>
+                                    <a class="btn btn-primary" href="companies/index.php" id="toggleNavPosition">View Companies</a>
+                                    <a class="btn btn-primary" href="companies/add_new_company.php" id="toggleNavPosition">Add Company</a>
                                 </div>
 
 
@@ -390,11 +437,11 @@ include("config.php");
             <!-- Custom scripts for this page-->
             <script src="js/sb-admin-datatables.min.js"></script>
             <script>
-                                $(document).ready(function () {
-                                    $('#dataTables-example').DataTable({
-                                        responsive: true
-                                    });
+                            $(document).ready(function () {
+                                $('#dataTables-example').DataTable({
+                                    responsive: true
                                 });
+                            });
             </script>
         </div>
 

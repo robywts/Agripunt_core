@@ -26,8 +26,6 @@ include("../config.php");
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_name']));
 
-            $h1 = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_h1']));
-
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_title']));
 
             $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_metadescription']));
@@ -51,7 +49,7 @@ include("../config.php");
             } else {
 
 // save the data to the database
-                $sql = "UPDATE subject SET subject_name='" . $name . "',subject_h1='" . $h1 . "', subject_title='" . $title . "', subject_metadescription='" . $description . "', subject_text='" . $text . "' where subject.id= $id";
+                $sql = "UPDATE subject SET subject_name='" . $name . "', subject_title='" . $title . "', subject_metadescription='" . $description . "', subject_text='" . $text . "' where subject.id= $id";
                 $res = mysqli_query($con, $sql);
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
@@ -114,10 +112,7 @@ include("../config.php");
                                         <label>Category Title *</label>
                                         <input name="subject_title" value="<?php echo $res_category['subject_title']; ?>" type="text" placeholder="Category Title">
                                     </div>
-                                    <div class="title-field form-group">
-                                        <label>Category H1 </label>
-                                        <input name="subject_h1" value="<?php echo $res_category['subject_h1']; ?>" type="text" placeholder="Category H1">
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="field-title">Category Name *</label>
                                         <input type="text" name="subject_name" value="<?php echo $res_category['subject_name']; ?>" placeholder="Category Name" class="common-input">

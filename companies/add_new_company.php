@@ -15,18 +15,10 @@ include("../config.php");
         <!-- Navigation-->
         <?php
         $active = "categories";
-        if (isset($_POST['id']))
-            $_SESSION['id'] = $_POST['id'];
-        if ($_SESSION['id']) {
-            $id = $_SESSION['id'];
-            $sql_category = "SELECT * FROM subject WHERE id=$id";
-            $res_category = mysqli_fetch_assoc(mysqli_query($con, $sql_category));
-        }
+
         if (isset($_POST['submit'])) {
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_name']));
-
-            $h1 = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_h1']));
 
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_title']));
 
@@ -51,14 +43,15 @@ include("../config.php");
             } else {
 
 // save the data to the database
-                $sql = "UPDATE subject SET subject_name='" . $name . "',subject_h1='" . $h1 . "', subject_title='" . $title . "', subject_metadescription='" . $description . "', subject_text='" . $text . "' where subject.id= $id";
-                $res = mysqli_query($con, $sql);
+                mysqli_query($con, "INSERT subject SET subject_name='$name', subject_title='$title', subject_metadescription='$description', subject_text='$text'")
+
+                    or die(mysqli_error($con));
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
-                echo 'window.location.href="' . $_SERVER['REQUEST_URI'] . '";';
+                echo 'window.location.href="index.php";';
                 echo '</script>';
                 echo '<noscript>';
-                echo '<meta http-equiv="refresh" content="0;url=' . $_SERVER['REQUEST_URI'] . '" />';
+                echo '<meta http-equiv="refresh" content="0;url=index.php" />';
                 echo '</noscript>';
 //                header("Location: manage_users.php");
             }
@@ -76,7 +69,7 @@ include("../config.php");
                     <div class="row">
                         <div class="page-title">
 
-                            Edit Category
+                            Add New Category
 
                         </div>
                         <div class="bread-crumbs"><!-- Breadcrumbs-->
@@ -109,32 +102,29 @@ include("../config.php");
                         <div class="col-md-12 ">
 
                             <div class="row">
-                                <form id="categoryEdit" method="POST">
+                                <form id="categoryAdd" method="POST">
                                     <div class="title-field form-group">
                                         <label>Category Title *</label>
-                                        <input name="subject_title" value="<?php echo $res_category['subject_title']; ?>" type="text" placeholder="Category Title">
+                                        <input name="subject_title" type="text" placeholder="Category Title">
                                     </div>
-                                    <div class="title-field form-group">
-                                        <label>Category H1 </label>
-                                        <input name="subject_h1" value="<?php echo $res_category['subject_h1']; ?>" type="text" placeholder="Category H1">
-                                    </div>
+
                                     <div class="form-group">
                                         <label class="field-title">Category Name *</label>
-                                        <input type="text" name="subject_name" value="<?php echo $res_category['subject_name']; ?>" placeholder="Category Name" class="common-input">
+                                        <input type="text" name="subject_name" placeholder="Category Name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Meta Description</label>
-                                        <textarea name="subject_metadescription" value="" class="text-area"><?php echo $res_category['subject_metadescription']; ?></textarea>
+                                        <textarea name="subject_metadescription" class="text-area"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Category Text</label>
-                                        <textarea name="subject_text" value="" class="text-area"><?php echo $res_category['subject_text']; ?></textarea>
+                                        <textarea name="subject_text" class="text-area"></textarea>
                                     </div>
 
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Update</span></button>
-                                        <button type="reset" class="btn btn-warning cancel inlline-block" >
+                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Add</span></button>
+                                        <button type="reset" class="btn btn-warning cancel inlline-block" onClick="$(':input').val('');">
 
                                             <span>Cancel</span>
                                         </button>

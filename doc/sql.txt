@@ -18,3 +18,10 @@ INSERT INTO `subscribers` (`id`, `name`, `email`, `subscribed_date`) VALUES
 COMMIT;
 **********13-feb-2018************
 ALTER TABLE `rssfeed` ADD `rss_name` VARCHAR(250) NOT NULL DEFAULT 'Not Available' AFTER `company_ID`;
+**********16-feb-2018************
+ALTER TABLE `rssfeed` CHANGE `updated_at` `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `rssfeed` CHANGE `created_at` `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `rssfeed` CHANGE `created_at` `created_at` TIMESTAMP NULL DEFAULT NULL;
+ALTER TABLE `rssfeed` CHANGE `updated_at` `updated_at` TIMESTAMP NULL DEFAULT NULL;
+
+ALTER TABLE `company` ADD `company_h1` VARCHAR(250) NOT NULL AFTER `company_logourl`, ADD `company_metadescription` TEXT NOT NULL AFTER `company_h1`, ADD `company_title` VARCHAR(250) NOT NULL AFTER `company_metadescription`;

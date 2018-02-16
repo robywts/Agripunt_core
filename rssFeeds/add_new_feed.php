@@ -14,25 +14,22 @@ include("../config.php");
     <body class="fixed-nav sticky-footer bg-dark" id="page-top">
         <!-- Navigation-->
         <?php
-        $active = "topics";
+        $active = "rssfeeds";
 
         if (isset($_POST['submit'])) {
 // get form data, making sure it is valid
-            $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_name']));
+            $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['rss_name']));
 
-            $h1 = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_h1']));
+            $desc = mysqli_real_escape_string($con, htmlspecialchars($_POST['rss_description']));
 
-            $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_title']));
+            $url = mysqli_real_escape_string($con, htmlspecialchars($_POST['rss_url']));
 
-            $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_metadescription']));
-
-            $text = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_text']));
-
-
+            $status = mysqli_real_escape_string($con, htmlspecialchars($_POST['rss_active']));
+            $date = date('Y-m-d H:i:s');
 
 // check to make sure both fields are entered
 
-            if ($name == '' || $title == '') {
+            if ($name == '' || $url == '') {
 
 // generate error message
 
@@ -45,7 +42,7 @@ include("../config.php");
             } else {
 
 // save the data to the database
-                mysqli_query($con, "INSERT topic SET topic_name='$name', topic_h1='$h1', topic_title='$title', topic_metadescription='$description', topic_text='$text'")
+                mysqli_query($con, "INSERT rssfeed SET rss_name='$name', rss_description='$desc', rss_url='$url', rss_active='$status', created_at='$date'")
 
                     or die(mysqli_error($con));
 // once saved, redirect back to the view page
@@ -71,16 +68,16 @@ include("../config.php");
                     <div class="row">
                         <div class="page-title">
 
-                            Add New Topic
+                            Add New Rss Feed
 
                         </div>
                         <div class="bread-crumbs"><!-- Breadcrumbs-->
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
-                                    <a href="index.php">News Topics</a>
+                                    <a href="index.php">Rss Feeds</a>
                                 </li>
                                 <li class="breadcrumb-item active">
-                                    Add New Topic
+                                    Add New Rss Feed
                                 </li>
 
                             </ol>
@@ -109,24 +106,24 @@ include("../config.php");
 
                                 <form id="topicAdd" method="POST">
                                     <div class="form-group">
-                                        <label class="field-title">Topic Name *</label>
-                                        <input type="text" name="topic_name" placeholder="Topic Name" class="common-input">
-                                    </div>
-                                    <div class="title-field form-group">
-                                        <label>Topic H1 </label>
-                                        <input name="topic_h1" type="text" placeholder="Category H1">
+                                        <label class="field-title">Rss Name *</label>
+                                        <input type="text" name="rss_name" placeholder="Rss Name" class="common-input">
                                     </div>
                                     <div class="form-group">
-                                        <label class="field-title">Meta Description</label>
-                                        <textarea name="topic_metadescription" class="text-area"></textarea>
+                                        <label class="field-title">Description</label>
+                                        <textarea name="rss_description" class="text-area"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label class="field-title">Topic Text</label>
-                                        <textarea  name="topic_text" class="text-area"></textarea>
+                                        <label class="field-title">Rss URL *</label>
+                                        <textarea  name="rss_url" class="text-area"></textarea>
                                     </div>
-                                    <div class="title-field form-group">
-                                        <label>Topic Title *</label>
-                                        <input type="text" name="topic_title" placeholder="Topic Title">
+                                    <div class="form-group">
+                                        <label class="field-title">Status</label>
+                                        <!--<input type="text" placeholder="Status"  class="common-input" disabled>-->
+                                        <select placeholder="Status" name="rss_active" class="common-input">
+                                            <option value="1" > Active</option>
+                                            <option value="0" >Inactive</option>
+                                        </select>
                                     </div>
                                     <div class="button-group">
 

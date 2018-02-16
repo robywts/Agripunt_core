@@ -20,6 +20,8 @@ include("../config.php");
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_name']));
 
+            $h1 = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_h1']));
+
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_title']));
 
             $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_metadescription']));
@@ -43,7 +45,7 @@ include("../config.php");
             } else {
 
 // save the data to the database
-                mysqli_query($con, "INSERT subject SET subject_name='$name', subject_title='$title', subject_metadescription='$description', subject_text='$text'")
+                mysqli_query($con, "INSERT subject SET subject_name='$name', subject_title='$title', subject_metadescription='$description', subject_text='$text', subject_h1='$h1'")
 
                     or die(mysqli_error($con));
 // once saved, redirect back to the view page
@@ -107,7 +109,10 @@ include("../config.php");
                                         <label>Category Title *</label>
                                         <input name="subject_title" type="text" placeholder="Category Title">
                                     </div>
-
+                                    <div class="title-field form-group">
+                                        <label>Category H1 </label>
+                                        <input name="subject_h1" type="text" placeholder="Category H1">
+                                    </div>
                                     <div class="form-group">
                                         <label class="field-title">Category Name *</label>
                                         <input type="text" name="subject_name" placeholder="Category Name" class="common-input">

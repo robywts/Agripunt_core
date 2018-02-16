@@ -26,6 +26,8 @@ include("../config.php");
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_name']));
 
+            $h1 = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_h1']));
+
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_title']));
 
             $description = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_metadescription']));
@@ -49,7 +51,7 @@ include("../config.php");
             } else {
 
 // save the data to the database
-                $sql = "UPDATE topic SET topic_name='" . $name . "', topic_title='" . $title . "', topic_metadescription='" . $description . "', topic_text='" . $text . "' where topic.id= $id";
+                $sql = "UPDATE topic SET topic_name='" . $name . "',topic_h1='" . $h1 . "', topic_title='" . $title . "', topic_metadescription='" . $description . "', topic_text='" . $text . "' where topic.id= $id";
                 $res = mysqli_query($con, $sql);
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
@@ -84,7 +86,7 @@ include("../config.php");
                                     <a href="index.php">News Topics</a>
                                 </li>
                                 <li class="breadcrumb-item active">
-                                    Add New Topic
+                                    Edit Topic
                                 </li>
 
                             </ol>
@@ -115,6 +117,10 @@ include("../config.php");
                                     <div class="form-group">
                                         <label class="field-title">Topic Name *</label>
                                         <input type="text" value="<?php echo $res_topic['topic_name']; ?>" name="topic_name" placeholder="Topic Name" class="common-input">
+                                    </div>
+                                    <div class="title-field form-group">
+                                        <label>Topic H1 </label>
+                                        <input name="topic_h1" value="<?php echo $res_topic['topic_h1']; ?>" type="text" placeholder="Topic H1">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Meta Description</label>

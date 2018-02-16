@@ -147,15 +147,25 @@ include("config.php");
                         </a>
                     </li>
 
-                    <li class="nav-item <?php if ($active == 'subscribers') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <li class="nav-item <?php if ($active == 'subscribers')
+                            echo 'active';
+                        else
+                            '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
                         <a class="nav-link" href="subscribers/index.php">
                             <i class="fa fa-fw fa-envelope-open"></i>
                             <span class="nav-link-text">Newletter Subscribers</span>
                         </a>
                     </li>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="companies.html">
+                    <li class="nav-item <?php
+                    if ($active == 'companies')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                        <a class="nav-link" href="companies/index.php">
                             <i class="fa fa-fw fa-building"></i>
                             <span class="nav-link-text">Companies</span>
                         </a>

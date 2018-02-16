@@ -3,7 +3,7 @@ include "../control.inc";
 include("../config.php");
 if (isset($_POST['search'])) {
     unset($_SESSION['condition']);
-    category_list($con, $_POST['name'], $_POST['desc'], $_POST['text'], $_POST['searchAll']);
+    category_list($con, $_POST['name'], $_POST['h1'], $_POST['desc'], $_POST['text'], $_POST['searchAll']);
     return true;
 }
 
@@ -60,6 +60,7 @@ if (isset($_POST['search'])) {
                                 <thead>
                                     <tr class="alternateRow">
                                         <th>Category Name</th>
+                                        <th>Category H1</th>
                                         <th>Meta Description</th>
                                         <th>Category Text</th>
                                         <th>Category Title</th>
@@ -72,7 +73,7 @@ if (isset($_POST['search'])) {
                                 </thead>
                                 <tr class="table-search">
                                     <td><label><input type="search" class="form-control form-control-sm" id="name_search"  placeholder="Search By Category Name" aria-controls="dataTables-example"></label></td>
-
+                                    <td><label><input type="search" class="form-control form-control-sm" id="h1_search"  placeholder="Search By H1" aria-controls="dataTables-example"></label></td>
                                     <td><label><input type="search" class="form-control form-control-sm" id="desc_search"  placeholder="Search By Meta Description" aria-controls="dataTables-example"></label></td>
                                     <td><label><input type="search" class="form-control form-control-sm" id="text_search"  placeholder="Search By Category Text" aria-controls="dataTables-example"></label></td>
                                     <td></td>
@@ -81,21 +82,23 @@ if (isset($_POST['search'])) {
                                 </tr>
                                 <tbody id="tableDatContainer">
                                     <?php
-                                    category_list($con, $name_search = '', $desc_search = '', $text_search = '', $search_all = '');
+                                    category_list($con, $name_search = '', $h1_search = '', $desc_search = '', $text_search = '', $search_all = '');
 
-                                    function category_list($con, $name_search, $desc_search = '', $text_search = '', $search_all)
+                                    function category_list($con, $name_search, $h1_search, $desc_search = '', $text_search = '', $search_all)
                                     {
                                         $condition = '';
                                         if (isset($_SESSION['condition']) && isset($_GET['currentpage']))
                                             $condition = $_SESSION['condition'];
                                         if ($name_search != '')
                                             $condition .= " AND s.subject_name like '%" . $name_search . "%'";
+                                        if ($h1_search != '')
+                                            $condition .= " AND s.subject_h1 like '%" . $h1_search . "%'";
                                         if ($desc_search != '')
                                             $condition .= " AND s.subject_metadescription like '%" . $desc_search . "%'";
                                         if ($text_search != '')
                                             $condition .= " AND s.subject_text like '%" . $text_search . "%'";
                                         if ($search_all != '')
-                                            $condition .= " AND (s.subject_name like '%" . $search_all . "%' OR s.subject_metadescription like '%" . $search_all . "%' OR s.subject_text like '%" . $search_all . "%')";
+                                            $condition .= " AND (s.subject_name like '%" . $search_all . "%' OR s.subject_metadescription like '%" . $search_all . "%' OR s.subject_text like '%" . $search_all . "%'  OR s.subject_h1 like '%" . $search_all . "%')";
                                         $_SESSION['condition'] = $condition;
                                         $sqll = "SELECT COUNT(*) FROM subject as s where 1=1 $condition";
                                         $result = mysqli_query($con, $sqll);
@@ -129,7 +132,7 @@ if (isset($_POST['search'])) {
 
                                         //pagination end
 
-                                        $sql = "SELECT s.id, s.subject_name, s.subject_metadescription, s.subject_title, s.subject_text, (SELECT COUNT(1) AS other FROM article_subject as ass 
+                                        $sql = "SELECT s.id, s.subject_name, s.subject_h1, s.subject_metadescription, s.subject_title, s.subject_text, (SELECT COUNT(1) AS other FROM article_subject as ass 
     where ass.subject_ID = asub.subject_ID GROUP BY ass.subject_ID) as count FROM subject as s Left JOIN article_subject as asub
     ON s.id = asub.subject_ID where 1=1" . $condition . " GROUP BY s.id";
 
@@ -141,6 +144,7 @@ if (isset($_POST['search'])) {
                                                 $id = $row['id'];
                                                 echo "<tr class='normalRow'>";
                                                 echo "<td>" . $row['subject_name'] . "</td>";
+                                                echo "<td>" . $row['subject_h1'] . "</td>";
                                                 echo "<td>" . $row['subject_metadescription'] . "</td>";
                                                 echo "<td>" . $row['subject_text'] . "</td>";
                                                 echo "<td>" . $row['subject_title'] . "</td>";
@@ -154,7 +158,7 @@ if (isset($_POST['search'])) {
                                             $range = 3;
 
 // if not on page 1, don't show back links
-                                            echo "<tr><td style='text-align:right;margin: 0px;border:1px solid white;' colspan='6'>";
+                                            echo "<tr><td style='text-align:right;margin: 0px;border:1px solid white;' colspan='7'>";
                                             if ($currentpage > 1) {
                                                 // show << link to go back to page 1
 
@@ -191,7 +195,7 @@ if (isset($_POST['search'])) {
                                             /*                                             * **** end build pagination links ***** */
                                             echo "</td><tr>";
                                         } else {
-                                            echo "<td colspan='6'><p align='center'>No Results Found.</p></td>";
+                                            echo "<td colspan='7'><p align='center'>No Results Found.</p></td>";
                                         }
                                     }
                                     $con->close();
@@ -221,7 +225,7 @@ if (isset($_POST['search'])) {
             $.ajax(
                     {
                         type: 'post',
-                        data: {search: search, name: $('#name_search').val(), desc: $('#desc_search').val(), text: $('#text_search').val(), searchAll: $('#search_all').val()},
+                        data: {search: search, name: $('#name_search').val(), h1: $('#h1_search').val(), desc: $('#desc_search').val(), text: $('#text_search').val(), searchAll: $('#search_all').val()},
                         success: function (data) {
                             $('#tableDatContainer').html(data);
 

@@ -49,7 +49,12 @@ if (isset($_POST['search'])) {
 
                     <div class="card-body">
                         <div class="table-responsive">
+                            <div class="col-md-6 float-right pr0 mb15">
+                                <div class="col-sm-12 col-md-12 float-right text-right pr0">
+                                    <a class="btn btn-primary table-top-btn" href="add_new_feed.php">Add New Feed</a>
+                                </div>
 
+                            </div>
                             <table class="table table-bordered" id="dataTables-example3" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
@@ -66,14 +71,14 @@ if (isset($_POST['search'])) {
                                     <td><label><input type="search" id="name_search" class="form-control form-control-sm" placeholder="Search By Company Name" aria-controls="dataTables-example"></label></td>
 
                                     <td><div class="dropdown">
-<!--                                            <button class="table-dropdown dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Active
-                                            </button>-->
-<!--                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" href="#">Active</a>
-                                                <a class="dropdown-item" href="#">Inactive</a>
-
-                                            </div>-->
+                                            <!--                                            <button class="table-dropdown dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                            Active
+                                                                                        </button>-->
+                                            <!--                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                                            <a class="dropdown-item" href="#">Active</a>
+                                                                                            <a class="dropdown-item" href="#">Inactive</a>
+                                            
+                                                                                        </div>-->
                                             <select placeholder="Status" name="status" id="status_search">
                                                 <option value="">Status</option>
                                                 <option value="1" > Active</option>
@@ -98,7 +103,7 @@ if (isset($_POST['search'])) {
                                         if ($name_search != '')
                                             $condition .= " AND rs.rss_name like '%" . $name_search . "%'";
                                         if ($status_search != '')
-                                            $condition .= " AND rs.rss_active =". $status_search;
+                                            $condition .= " AND rs.rss_active =" . $status_search;
                                         $_SESSION['condition'] = $condition;
                                         $sqll = "SELECT COUNT(*) FROM rssfeed as rs where 1=1 $condition";
                                         $result = mysqli_query($con, $sqll);
@@ -148,7 +153,7 @@ if (isset($_POST['search'])) {
                                                 echo "<td>" . $row['rss_lastreaddate'] . "</td>";
                                                 echo "<td>" . $row['rss_url'] . "</td>";
 //                                                echo "<td><a href = 'edit_topic.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = 'delete_topic.php?id=" . $row['id'] . "' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete'>DELETE</a></td>";
-                                                echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='edit_subscriber.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='delete_subscriber.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";
+                                                echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='edit_feed.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='delete_feed.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";
                                                 echo "</tr>";
                                             }
                                             /*                                             * ****  build the pagination links ***** */
@@ -230,7 +235,7 @@ if (isset($_POST['search'])) {
                         }
                     });
         });
-          $("select").change(function () {
+        $("select").change(function () {
             var search = true;
             $.ajax(
                     {
