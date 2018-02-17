@@ -49,6 +49,16 @@ if (isset($_POST['search'])) {
                 <div class="card mb-3">
 
                     <div class="card-body">
+                        <?php
+// if there are any errors, display them
+                        //session_start();
+//                        if (!empty($_SESSION['err_message'])) {
+//                            $message = $_SESSION['err_message'];
+//
+//                            echo '<div style="padding:4px; border:1px solid red; color:red;">' . $message . '</div>';
+//                        }
+
+                        ?>
                         <div class="table-responsive">
                             <div class="col-md-6 float-right pr0 mb15">
                                 <div class="col-sm-12 col-md-12 float-right text-right pr0">
@@ -65,7 +75,7 @@ if (isset($_POST['search'])) {
                                         <th>Address</th>
                                         <th>Logo URL</th>
                                         <th>Logo</th>
-                                        <th>Zip Code</th>
+                                        <th>Zip</th>
                                         <th>H1</th>
                                         <th>Meta Description</th>
                                         <th>Company Title</th>
@@ -149,12 +159,13 @@ if (isset($_POST['search'])) {
                                         if ($query && mysqli_num_rows($query) != 0) {
                                             while ($row = mysqli_fetch_assoc($query)) {
                                                 $id = $row['id'];
-                                                $logo = '';
+                                                $logo_url = $row['company_logourl'] ? 'http://' . $_SERVER['SERVER_NAME'] . '/Agripunt_core/uploads/companies/' . $row['id'] . '/' . $row['company_logourl'] : '';
+                                                $img = $row['company_logourl'] ? "<img src='../uploads/companies/" . $row['id'] . '/' . $row['company_logourl'] . "' style='width: 50px;height: 50px;'>" : '';
                                                 echo "<tr class='normalRow'>";
                                                 echo "<td>" . $row['company_name'] . "</td>";
                                                 echo "<td>" . $row['company_address'] . "</td>";
-                                                echo "<td>" . $row['company_logourl'] . "</td>";
-                                                echo "<td><img src='" . $logo . "' style='width': 50px;height: 50px;'></td>";
+                                                echo "<td>" . $logo_url . "</td>";
+                                                echo "<td>" . $img . "</td>";
                                                 echo "<td>" . $row['company_zip'] . "</td>";
                                                 echo "<td>" . $row['company_h1'] . "</td>";
                                                 echo "<td>" . $row['company_metadescription'] . "</td>";
