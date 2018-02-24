@@ -2,7 +2,7 @@
 include "../control.inc";
 include("../config.php");
 if (isset($_POST['search'])) {
-    postlist($_GET['id'], $con, $_POST['name'], $_POST['category'], $_POST['topic'], $_POST['searchAll']);
+    postlist($_SESSION['id'], $con, $_POST['name'], $_POST['category'], $_POST['topic'], $_POST['searchAll']);
     return true;
 }
 
@@ -166,17 +166,17 @@ if (isset($_POST['search'])) {
                                                         if ($category_search != '')
                                                             $conditions .= " AND subject_name like '%" . $category_search . "%'";
                                                         if ($topic_search != '') {
-                                                            $conditions .= " AND file_name like '%" . $topic_search . "%'";
+                                                            $conditions .= " AND topic_name like '%" . $topic_search . "%'";
                                                         }
                                                         if ($search_all != '')
-                                                            $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR file_name like '%" . $search_all . "%')";
+                                                            $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR topic_name like '%" . $search_all . "%')";
                                                         $sql_posts = "SELECT article.id,article.article_title, article.article_comment,"
                                                             . " GROUP_CONCAT(DISTINCT c.company_name SEPARATOR ', ') as company_name,"
                                                             . " GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subject_name,"
-                                                            . " GROUP_CONCAT(DISTINCT f.file_name SEPARATOR ', ') as topic FROM article  "
+                                                            . " GROUP_CONCAT(DISTINCT f.topic_name SEPARATOR ', ') as topic FROM article  "
                                                             . "LEFT JOIN article_subject as asu ON asu.article_ID = article.id LEFT JOIN subject as s ON asu.subject_ID = s.id "
                                                             . "LEFT JOIN article_company as ac ON ac.article_ID = article.id LEFT JOIN company as c ON c.id = ac.company_ID "
-                                                            . "LEFT JOIN article_file as af ON af.article_ID = article.id LEFT JOIN file as f ON af.file_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
+                                                            . "LEFT JOIN article_topic as af ON af.article_ID = article.id LEFT JOIN topic as f ON af.topic_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
 
 //                          echo $sql_posts;exit;
                                                         $query = mysqli_query($con, $sql_posts);

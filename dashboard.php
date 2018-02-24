@@ -70,7 +70,7 @@ include("config.php");
                         '';
 
                     ?>" data-toggle="tooltip" data-placement="right" title="Charts">
-                        <a class="nav-link" href="manage_posts.html">
+                        <a class="nav-link" href="articles/index.php">
                             <i class="fa fa-fw fa-sticky-note"></i>
                             <span class="nav-link-text">Manage Posts</span>
                         </a>

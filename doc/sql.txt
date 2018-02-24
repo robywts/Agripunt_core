@@ -25,3 +25,5 @@ ALTER TABLE `rssfeed` CHANGE `created_at` `created_at` TIMESTAMP NULL DEFAULT NU
 ALTER TABLE `rssfeed` CHANGE `updated_at` `updated_at` TIMESTAMP NULL DEFAULT NULL;
 
 ALTER TABLE `company` ADD `company_h1` VARCHAR(250) NOT NULL AFTER `company_logourl`, ADD `company_metadescription` TEXT NOT NULL AFTER `company_h1`, ADD `company_title` VARCHAR(250) NOT NULL AFTER `company_metadescription`;
+**********24-feb-2018************
+ALTER TABLE `article` ADD `sort_order` INT(11) NOT NULL DEFAULT '1' AFTER `user_id`;

@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: text/html; charset=ISO-8859-1");
 $admin_user = "SELECT * FROM users WHERE type=1";
 $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
 
@@ -25,7 +26,7 @@ $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
                 </a>
             </li>
             <li class="nav-item <?php if($active == 'posts') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Charts">
-                <a class="nav-link" href="manage_posts.html">
+                <a class="nav-link" href="../articles/index.php">
                     <i class="fa fa-fw fa-sticky-note"></i>
                     <span class="nav-link-text">Manage Posts</span>
                 </a>
