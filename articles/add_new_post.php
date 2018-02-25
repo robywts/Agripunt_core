@@ -26,44 +26,70 @@ include("../config.php");
 // get form data, making sure it is valid
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['article_title']));
 
-            $subject_ids = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_ID']));
+            $subject_ids = isset($_POST['subject_ID']) ? $_POST['subject_ID'] : '';
 
-            $topic_ids = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_ID']));
+            $topic_ids = isset($_POST['topic_ID']) ? $_POST['topic_ID'] : '';
 
-            $company_ids = mysqli_real_escape_string($con, htmlspecialchars($_POST['company_ID']));
+            $company_ids = isset($_POST['company_ID']) ? $_POST['company_ID'] : '';
 
             $article_summary = mysqli_real_escape_string($con, htmlspecialchars($_POST['article_summary']));
 
-            $article_content = $_POST['article_content'];
-
-
-            for ($i = 0; $i < count($_FILES["file"]["name"]); $i++) {
-                $uploadfile = $_FILES["file"]["tmp_name"][$i];
-                $folder = "../uploads/companies/$insert_id/";
-                move_uploaded_file($_FILES["file"]["tmp_name"][$i], "$folder" . $_FILES["file"]["name"][$i]);
-            }
-
-
-
+            $article_content = mysqli_real_escape_string($con, $_POST['article_content']);
 
 // check to make sure both fields are entered
 
-            if ($name == '' || $title == '') {
+            if ($title == '' || $subject_ids == '' || $article_content == '') {
 
 // generate error message
 
                 $error = 'ERROR: Please fill in all required fields!';
 
-
-
 // if either field is blank, display the form again
 //renderForm($firstname, $lastname, $error);
             } else {
-
 // save the data to the database
-                mysqli_query($con, "INSERT subject SET subject_name='$name', subject_title='$title', subject_metadescription='$description', subject_text='$text', subject_h1='$h1'")
+              $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1";
+             // echo $sql;exit;  
+              mysqli_query($con, "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1")
 
                     or die(mysqli_error($con));
+                $insert_id = mysqli_insert_id($con);
+                if ($insert_id) {
+                    if ($subject_ids != '') {
+                        foreach ($subject_ids as $subject_id) {
+                            mysqli_query($con, "INSERT article_subject SET article_ID='$insert_id', subject_ID='$subject_id'");
+                        }
+                    }
+                    if ($topic_ids != '') {
+                        foreach ($topic_ids as $topic_id) {
+                            mysqli_query($con, "INSERT article_topic SET article_ID='$insert_id', topic_ID='$topic_id'");
+                        }
+                    }
+                    if ($company_ids != '') {
+                        foreach ($company_ids as $company_id) {
+                            mysqli_query($con, "INSERT article_company SET article_ID='$insert_id', company_ID='$company_id'");
+                        }
+                    }
+                    if ($_FILES['file']['name'] != '') {
+                        for ($i = 0; $i < count($_FILES["file"]["name"]); $i++) {
+                            $condition = '';
+                            $file = rand(1000, 100000) . "-" . $_FILES["file"]["name"][$i];
+                            $file_loc = $_FILES["file"]['tmp_name'][$i];
+                            $file_size = $_FILES['file']['size'][$i];
+                            $file_type = $_FILES['file']['type'][$i];
+                            $folder = "../uploads/articles/$insert_id/";
+                            if (!is_dir("../uploads/articles/$insert_id/")) {
+                                mkdir("../uploads/articles/$insert_id/");
+                            }
+                            move_uploaded_file($file_loc, $folder . $file);
+                            $condition .= " image_url='" . $file . "',article_ID= $insert_id";
+                            $sql = "INSERT article_image SET $condition";
+                            $res = mysqli_query($con, $sql);
+                        }
+                    }
+                } else {
+                    $error = 'ERROR: Form Submission,Please Try again.!';
+                }
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
                 echo 'window.location.href="index.php";';
@@ -105,6 +131,14 @@ include("../config.php");
                 <div class="">
                     <div class="card mb-3">
                         <div class="card-body">
+                            <?php
+// if there are any errors, display them
+                            if (isset($error) && $error != '') {
+
+                                echo '<div style="padding:4px; border:1px solid red; color:red;">' . $error . '</div>';
+                            }
+
+                            ?>
                             <form  method="post" enctype="multipart/form-data">
                                 <div class="title-field form-group">
                                     <label>Article Title *</label>
@@ -253,10 +287,6 @@ include("../config.php");
                         $("#txtEditor").val($("#txtEditor").Editor("getText"));
                     });
 
-//                    $(document).ready(function () {
-//                        $("#txtEditor").Editor();
-//                        $("#txtEditor").Editor("setText", <?php // echo $value['details'];    ?>);
-//                    });
                 </script>
                 <link href="../css/editor.css" type="text/css" rel="stylesheet"/>
 

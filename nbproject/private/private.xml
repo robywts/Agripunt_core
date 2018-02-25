@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp64/www/Agripunt_core/companies/index.php</file>
+            <file>file:/C:/wamp64/www/Agripunt_core/articles/index.php</file>
+            <file>file:/C:/wamp64/www/Agripunt_core/users/edit_users.php</file>
+            <file>file:/C:/wamp64/www/Agripunt_core/articles/add_new_post.php</file>
+            <file>file:/C:/wamp64/www/Agripunt_core/articles/edit_post.php</file>
+            <file>file:/C:/wamp64/www/Agripunt_core/articles/delete_post.php</file>
         </group>
     </open-files>
 </project-private>

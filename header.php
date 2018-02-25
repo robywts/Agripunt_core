@@ -86,7 +86,7 @@ $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-            <li class="mr15"><a class="btn btn-primary btn-block " href="../post/add_new_post.php">Add New Post</a>
+            <li class="mr15"><a class="btn btn-primary btn-block " href="../articles/add_new_post.php">Add New Post</a>
 
             </li>
             <li class="mr15">

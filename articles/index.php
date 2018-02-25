@@ -81,6 +81,7 @@ if (isset($_POST['search'])) {
                                     <td><label><input type="search" class="form-control form-control-sm" placeholder="Search by Topic" id="topic_search" aria-controls="dataTables-example"></label></td>
                                     <td></td>
                                     <td></td>
+                                    <td></td>
                                 </tr>
                                 <tbody id="tableDatContainer">
                                     <?php
@@ -102,7 +103,8 @@ if (isset($_POST['search'])) {
                                         if ($search_all != '')
                                             $condition .= " AND at.article_title like '%" . $search_all . "%' OR u.name like '%" . $search_all . "%' OR s.subject_name like '%" . $search_all . "%'  OR t.topic_name like '%" . $search_all . "%'";
                                         $_SESSION['condition'] = $condition;
-                                        $sqll = "SELECT COUNT(*) FROM article as at LEFT JOIN users u on u.id=at.user_id LEFT JOIN article_subject on article_subject.article_ID=at.id LEFT JOIN subject s on s.id=article_subject.subject_ID LEFT JOIN article_topic on article_topic.article_ID=at.id LEFT JOIN topic t on t.id=article_topic.topic_ID LEFT JOIN article_company as ac ON ac.article_ID = at.id LEFT JOIN company as c ON c.id = ac.company_ID  where 1=1 $condition";
+                                        $sqll = "SELECT COUNT(DISTINCT at.id) FROM article as at LEFT JOIN users u on u.id=at.user_id LEFT JOIN article_subject on article_subject.article_ID=at.id LEFT JOIN subject s on s.id=article_subject.subject_ID LEFT JOIN article_topic on article_topic.article_ID=at.id LEFT JOIN topic t on t.id=article_topic.topic_ID LEFT JOIN article_company as ac ON ac.article_ID = at.id LEFT JOIN company as c ON c.id = ac.company_ID  where 1=1 $condition ";
+                                       // echo $sqll;exit;
                                         $result = mysqli_query($con, $sqll);
 //                                        echo $sqll;
                                         $r = mysqli_fetch_row($result);
