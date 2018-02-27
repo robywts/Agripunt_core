@@ -17,9 +17,9 @@ if (isset($_POST['search'])) {
     if ($_SESSION['id']) {
         $id = $_SESSION['id'];
         $sql_user = "SELECT * FROM users WHERE id=$id";
-        $res_user = mysqli_fetch_assoc(mysqli_query($con, $sql_user));
+        $res_user1 = mysqli_fetch_assoc(mysqli_query($con, $sql_user));
     }
-    if (isset($_POST['submit'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
         $name = $_POST['name'];
         $email = $_POST['email'];
         $status = $_POST['status'];
@@ -96,126 +96,126 @@ if (isset($_POST['search'])) {
                                 <div class="container pr0 mb15 pb10 border-bottom">
                                     <div class="col-sm-12 col-md-12 float-right text-right pr0">
 
-                                        
-                                                                                <!--<a class="btn delete table-top-btn delete-item" onClick="return confirm('Are you sure you want to delete this?');" href='delete.php?id=<?php echo $id ?>'>Delete User</a>-->
+
+                                        <!--<a class="btn delete table-top-btn delete-item" onClick="return confirm('Are you sure you want to delete this?');" href='delete.php?id=<?php echo $id ?>'>Delete User</a>-->
                                     </div>
 
                                 </div>
                                 <form id="userEdit" method="POST">
                                     <div class="form-group">
                                         <label class="field-title">Name of User *</label>
-                                        <input type="text" placeholder="Name" value="<?php echo $res_user['name']; ?>" name="name" class="common-input">
+                                        <input type="text" placeholder="Name" value="<?php echo $res_user1['name']; ?>" name="name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Email ID *</label>
-                                        <input type="text" placeholder="Email" value="<?php echo $res_user['email']; ?>" name="email" class="common-input">
+                                        <input type="text" placeholder="Email" value="<?php echo $res_user1['email']; ?>" name="email" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Status *</label>
                                         <!--<input type="text" placeholder="Status"  class="common-input" disabled>-->
                                         <select placeholder="Status" name="status" class="common-input">
                                             <option value="">Select Status</option>
-                                            <option value="1" <?php echo $res_user['status'] == 1 ? 'selected' : ''; ?>> Active</option>
-                                            <option value="0" <?php echo $res_user['status'] == 0 ? 'selected' : ''; ?>>Inactive</option>
+                                            <option value="1" <?php echo $res_user1['status'] == 1 ? 'selected' : ''; ?>> Active</option>
+                                            <option value="0" <?php echo $res_user1['status'] == 0 ? 'selected' : ''; ?>>Inactive</option>
                                         </select>
                                     </div>
+                                </form>
+                                <div class="">
+                                    <label class="field-title border-bottom pb10">Posts</label>
+                                    <div class="table-responsive">
+                                        <div class="col-md-6 float-right pr0 mb15">
+                                            <div class="col-sm-12 col-md-12 float-right text-right pr0">
 
-                                    <div class="">
-                                        <label class="field-title border-bottom pb10">Posts</label>
-                                        <div class="table-responsive">
-                                            <div class="col-md-6 float-right pr0 mb15">
-                                                <div class="col-sm-12 col-md-12 float-right text-right pr0">
 
-
-                                                    <div id="dataTables-example_filter" class="dataTables_filter table-top-search"><input type="search" id="search_all" class="form-control form-control-sm" placeholder="Search Posts" aria-controls="dataTables-example"></div>
-                                                </div>
-
+                                                <div id="dataTables-example_filter" class="dataTables_filter table-top-search"><input type="search" id="search_all" class="form-control form-control-sm" placeholder="Search Posts" aria-controls="dataTables-example"></div>
                                             </div>
-                                            <table class="table table-bordered" id="dataTables-example2" width="100%" cellspacing="0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Post Name</th>                 
-                                                        <th>Category/Subject</th>                 
-                                                        <th>Topic</th>
-                                                        <th>Companies</th>
-                                                        <th>Comments</th>
-                                                        <th>Actions</th>
 
+                                        </div>
+                                        <table class="table table-bordered" id="dataTables-example2" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Post Name</th>                 
+                                                    <th>Category/Subject</th>                 
+                                                    <th>Topic</th>
+                                                    <th>Companies</th>
+                                                    <th>Comments</th>
+                                                    <th>Actions</th>
 
-                                                    </tr>
-
-                                                </thead>
-                                                <tr class="table-search">
-                                                    <td><label><input type="search" class="form-control form-control-sm" id="name_search" placeholder="Search Post" aria-controls="dataTables-example"></label></td>
-                                                    <td><label><input type="search" class="form-control form-control-sm" id="category_search" placeholder="Search by Category" aria-controls="dataTables-example"></label></td>
-                                                    <td><label><input type="search" class="form-control form-control-sm" id="topic_search" placeholder="Search by Topic" aria-controls="dataTables-example"></label></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
 
                                                 </tr>
-                                                <tbody id="articleContainer">
-                                                    <?php
-                                                    postlist($id, $con, $name_search = '', $category_search = '', $topic_search = '', $search_all = '');
 
-                                                    function postlist($id, $con, $name_search, $category_search, $topic_search, $search_all)
-                                                    {
-                                                        $conditions = '';
-                                                        if ($name_search != '')
-                                                            $conditions .= " AND article.article_title like '%" . $name_search . "%'";
-                                                        if ($category_search != '')
-                                                            $conditions .= " AND subject_name like '%" . $category_search . "%'";
-                                                        if ($topic_search != '') {
-                                                            $conditions .= " AND topic_name like '%" . $topic_search . "%'";
-                                                        }
-                                                        if ($search_all != '')
-                                                            $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR topic_name like '%" . $search_all . "%')";
-                                                        $sql_posts = "SELECT article.id,article.article_title, article.article_comment,"
-                                                            . " GROUP_CONCAT(DISTINCT c.company_name SEPARATOR ', ') as company_name,"
-                                                            . " GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subject_name,"
-                                                            . " GROUP_CONCAT(DISTINCT f.topic_name SEPARATOR ', ') as topic FROM article  "
-                                                            . "LEFT JOIN article_subject as asu ON asu.article_ID = article.id LEFT JOIN subject as s ON asu.subject_ID = s.id "
-                                                            . "LEFT JOIN article_company as ac ON ac.article_ID = article.id LEFT JOIN company as c ON c.id = ac.company_ID "
-                                                            . "LEFT JOIN article_topic as af ON af.article_ID = article.id LEFT JOIN topic as f ON af.topic_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
+                                            </thead>
+                                            <tr class="table-search">
+                                                <td><label><input type="search" class="form-control form-control-sm" id="name_search" placeholder="Search Post" aria-controls="dataTables-example"></label></td>
+                                                <td><label><input type="search" class="form-control form-control-sm" id="category_search" placeholder="Search by Category" aria-controls="dataTables-example"></label></td>
+                                                <td><label><input type="search" class="form-control form-control-sm" id="topic_search" placeholder="Search by Topic" aria-controls="dataTables-example"></label></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+
+                                            </tr>
+                                            <tbody id="articleContainer">
+                                                <?php
+                                                postlist($id, $con, $name_search = '', $category_search = '', $topic_search = '', $search_all = '');
+
+                                                function postlist($id, $con, $name_search, $category_search, $topic_search, $search_all)
+                                                {
+                                                    $conditions = '';
+                                                    if ($name_search != '')
+                                                        $conditions .= " AND article.article_title like '%" . $name_search . "%'";
+                                                    if ($category_search != '')
+                                                        $conditions .= " AND subject_name like '%" . $category_search . "%'";
+                                                    if ($topic_search != '') {
+                                                        $conditions .= " AND topic_name like '%" . $topic_search . "%'";
+                                                    }
+                                                    if ($search_all != '')
+                                                        $conditions .= " AND (article_title like '%" . $search_all . "%' OR subject_name like '%" . $search_all . "%' OR topic_name like '%" . $search_all . "%')";
+                                                    $sql_posts = "SELECT article.id,article.article_title, article.article_comment,"
+                                                        . " GROUP_CONCAT(DISTINCT c.company_name SEPARATOR ', ') as company_name,"
+                                                        . " GROUP_CONCAT(DISTINCT s.subject_name SEPARATOR ', ') as subject_name,"
+                                                        . " GROUP_CONCAT(DISTINCT f.topic_name SEPARATOR ', ') as topic FROM article  "
+                                                        . "LEFT JOIN article_subject as asu ON asu.article_ID = article.id LEFT JOIN subject as s ON asu.subject_ID = s.id "
+                                                        . "LEFT JOIN article_company as ac ON ac.article_ID = article.id LEFT JOIN company as c ON c.id = ac.company_ID "
+                                                        . "LEFT JOIN article_topic as af ON af.article_ID = article.id LEFT JOIN topic as f ON af.topic_ID = f.id WHERE user_id=$id $conditions Group By article.id;";
 
 //                          echo $sql_posts;exit;
-                                                        $query = mysqli_query($con, $sql_posts);
-                                                        if ($query && mysqli_num_rows($query) != 0) {
-                                                            while ($row = mysqli_fetch_assoc($query)) {
-                                                                $id = $row['id'];
-                                                                echo "<tr class='normalRow'>";
-                                                                echo "<td>" . $row['article_title'] . "</td>";
-                                                                echo "<td>" . $row['subject_name'] . "</td>";
-                                                                echo "<td>" . $row['topic'] . "</td>";
-                                                                echo "<td>" . $row['company_name'] . "</td>";
-                                                                echo "<td>" . $row['article_comment'] . "</td>";
+                                                    $query = mysqli_query($con, $sql_posts);
+                                                    if ($query && mysqli_num_rows($query) != 0) {
+                                                        while ($row = mysqli_fetch_assoc($query)) {
+                                                            $id = $row['id'];
+                                                            echo "<tr class='normalRow'>";
+                                                            echo "<td>" . $row['article_title'] . "</td>";
+                                                            echo "<td>" . $row['subject_name'] . "</td>";
+                                                            echo "<td>" . $row['topic'] . "</td>";
+                                                            echo "<td>" . $row['company_name'] . "</td>";
+                                                            echo "<td>" . $row['article_comment'] . "</td>";
 //                                                                echo "<td><a href = '../articles/edit_post.php?id=" . $row['id'] . "' class = 'btn edit '>EDIT</a> <a href = '../articles/delete_post.php?id=" . $row['id'] . "' class = 'btn delete'>DELETE</a></td>";
-                                                                echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='../articles/edit_post.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='../articles/delete_post.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";
-                                                                echo "</tr>";
-                                                            }
-                                                        } else {
-                                                            echo "<tr><td colspan='6'><p align='center'>No Results Found.</p></td></tr>";
+                                                            echo "<td><div style='margin-left:5px;float: left;'><form method='post' action='../articles/edit_post.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' value='Edit' id='edit_btn' class='btn edit'></form></div><div style='margin-left:5px;float:left;'><form method='post' action='../articles/delete_post.php'><input type='hidden' name='id' value=" . $row['id'] . "><input type='submit' onClick=\"javascript:return confirm('Are you sure you want to delete this?');\" class = 'btn delete' value='Delete' id='delete_btn' class='btn delete'></form></div></td>";
+                                                            echo "</tr>";
                                                         }
+                                                    } else {
+                                                        echo "<tr><td colspan='6'><p align='center'>No Results Found.</p></td></tr>";
                                                     }
+                                                }
 //                                                    $con->close();
 
-                                                    ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                ?>
+                                            </tbody>
+                                        </table>
                                     </div>
+                                </div>
 
 
-                                    <div class="button-group">
+                                <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" id="editArticle" name="submit"  value="Submit"><span>Save</span></button>
-                                        <button type="reset" class="btn btn-warning cancel inlline-block" onClick="$(':input').val('');">
+                                    <button class="btn btn-primary btn-block inlline-block" id="editArticle" name="submit" onClick="javascript:document.getElementById('userEdit').submit();" value="Submit"><span>Save</span></button>
+                                    <button type="reset" class="btn btn-warning cancel inlline-block" onClick="$(':input').val('');">
 
-                                            <span>Cancel</span>
-                                        </button>
+                                        <span>Cancel</span>
+                                    </button>
 
-                                    </div>
-                                </form>
+                                </div>
+
                             </div>
                         </div>
                     </div>

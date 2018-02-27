@@ -1,12 +1,12 @@
 <?php
-header("Content-Type: text/html; charset=ISO-8859-1");
+//header("Content-Type: text/html; charset=ISO-8859-1");
 $admin_user = "SELECT * FROM users WHERE type=1";
 $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
 
 ?>
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-white fixed-top" id="mainNav">
-    <a class="navbar-brand desktop" href="index.html"><img src="../images/logo.png"></a>
+    <a class="navbar-brand desktop" href="../dashboard.php"><img src="../images/logo.png"></a>
       <!--<a class="navbar-brand mobile" href="index.html"><img src="images/logo-mobile.png"></a>-->
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

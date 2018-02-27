@@ -16,6 +16,7 @@ if (isset($_POST) && isset($_POST['email']) && isset($_POST['password'])) {
         if (password_verify($_POST['password'], $rs['password'])) {
             
             $_SESSION['login_user'] = $username;
+            $_SESSION['login_user_id'] = $rs['id'];
             echo "<script language='javascript' type='text/javascript'> location.href='dashboard.php' </script>";
         } else {
             echo "<script type='text/javascript'>alert('Email Or Password Invalid!'); </script>";

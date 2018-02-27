@@ -38,7 +38,6 @@ include("../config.php");
         $sql_company = "SELECT id, company_name FROM company";
 
         if (isset($_POST['submit'])) {
-
 // get form data, making sure it is valid
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['article_title']));
 
@@ -63,9 +62,9 @@ include("../config.php");
 // if either field is blank, display the form again
 //renderForm($firstname, $lastname, $error);
             } else {
-
+                $article_user = $res_article['user_id'];
 // save the data to the database
-                $sql = "UPDATE article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1, updated_at='" . $date . "' where article.id= $id";
+                $sql = "UPDATE article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id='$article_user', updated_at='" . $date . "' where article.id= $id";
                 $res = mysqli_query($con, $sql);
 
                 $result2 = mysqli_query($con, "DELETE FROM article_subject WHERE article_ID=$id");
@@ -330,7 +329,7 @@ include("../config.php");
         <script>
             $(document).ready(function () {
                 $("#txtEditor").Editor();
-                $("#txtEditor").Editor("setText", '<?php echo $res_article['article_content']; ?>');
+                $("#txtEditor").Editor("setText", '<?php echo str_replace("'", "/", $res_article['article_content']); ?>');
             });
             $(document).submit(function () {
                 $("#txtEditor").val($("#txtEditor").Editor("getText"));
