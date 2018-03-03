@@ -51,6 +51,14 @@ include("../config.php");
 
             $article_content = mysqli_real_escape_string($con, $_POST['article_content']);
             $date = date('Y-m-d H:i:s');
+
+            if ($_FILES['file']['name'] != '') {
+                for ($i = 0; $i < count($_FILES["file"]["name"]); $i++) {
+                    //echo $_FILES["file"]["size"][$i];exit;
+                    if ((($_FILES["file"]["type"][$i] == "video/mp4") || ($_FILES["file"]["type"][$i] == "audio/mp3") || ($_FILES["file"]["type"][$i] == "audio/wma") || ($_FILES["file"]["type"][$i] == "image/pjpeg") || ($_FILES["file"]["type"][$i] == "image/gif") || ($_FILES["file"]["type"][$i] == "image/jpeg")) && ($_FILES["file"]["size"][$i] > 10485760))
+                        $file_rrror = 1;
+                }
+            }
 // check to make sure both fields are entered
 
             if ($title == '' || $subject_ids == '' || $article_content == '') {
@@ -61,6 +69,8 @@ include("../config.php");
 
 // if either field is blank, display the form again
 //renderForm($firstname, $lastname, $error);
+            } else if (isset($file_rrror)) {
+                $error = 'ERROR: Please select Image/Video having size less than 10MB!';
             } else {
                 $article_user = $res_article['user_id'];
 // save the data to the database
@@ -86,7 +96,7 @@ include("../config.php");
                     }
                 }
 
-                if ($_FILES['file']['name'] != '' && count($_FILES["file"]["name"]) > 0) {
+                if (count($_FILES["file"]["name"]) > 0 && $_FILES['file']['size'][0] > 0) {
                     mysqli_query($con, "DELETE FROM article_image WHERE article_ID=$id");
                     array_map('unlink', glob($_POST['old_img']));
                     for ($i = 0; $i < count($_FILES["file"]["name"]); $i++) {
@@ -115,6 +125,7 @@ include("../config.php");
 //                header("Location: manage_users.php");
             }
         }
+
 
 
 
@@ -254,11 +265,12 @@ include("../config.php");
                                                 <!-- The file upload form used as target for the file upload widget -->
                                                 <div id="file_div">
                                                     <div>
-                                                        <input type="file" name="file[]">
+                                                        <input type="file" name="file[]" value="">
                                                         <input class="btn btn-primary" type="button" onclick="add_file();" value="ADD MORE">
                                                         <input id="old_img" type="hidden" name="old_img" value="../uploads/articles/<?php echo $id . '/*' ?>"/>
                                                     </div>
-                                                </div>                                 
+                                                </div>  
+                                                <i>Note: Select all files of this article.</i><p>
                                             </div>
                                         </div>
                                     </div>

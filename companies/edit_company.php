@@ -21,6 +21,8 @@ include("../config.php");
             $id = $_SESSION['id'];
             $sql_company = "SELECT * FROM company WHERE id=$id";
             $res_company = mysqli_fetch_assoc(mysqli_query($con, $sql_company));
+            $imgg = $res_company['company_logourl'];
+            $prev_image = $res_company['company_logourl'] ? "<p><img style='width: 100px;height: 100px;' src='../uploads/companies/$id/$imgg' />" : '';
         }
         if (isset($_POST['submit'])) {
 // get form data, making sure it is valid
@@ -67,7 +69,8 @@ include("../config.php");
                     $condition .= " company_logourl='" . $file . "'";
                     $sql = "UPDATE company SET $condition where company.id= $id";
                     $res = mysqli_query($con, $sql);
-                    unlink($_POST['old_img']);
+                    if ($res_company['company_logourl'] != '')
+                        unlink($_POST['old_img']);
                 }
 // once saved, redirect back to the view page
                 echo '<script type="text/javascript">';
@@ -152,8 +155,11 @@ include("../config.php");
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Company Logo</label>
-                                        <input type="file" name="company_logo" placeholder="Company Logo" class="common-input">
-                                        <input id="old_img" type="hidden" name="old_img" value="../uploads/companies/<?php echo $id.'/'.$res_company['company_logourl']; ?>"/>
+                                        <input type="file" name="company_logo" onchange="readURL(this);"  placeholder="Company Logo" class="common-input">
+                                        <!--<p><img style="width: 100px;height: 100px;" src="../uploads/companies/<?php echo $id . '/' . $res_company['company_logourl']; ?>" />-->
+                                        <div id='preview_img' style="padding-top: 5px" ><?php echo $prev_image ?></div>
+                                        <div style="padding-top: 5px" ><p><img id="edit_prev" style="width: 100px;height: 100px;" src="#" alt="" /></p></div>
+                                        <input id="old_img" type="hidden" name="old_img" value="../uploads/companies/<?php echo $id . '/' . $res_company['company_logourl']; ?>"/>
                                     </div>
 
                                     <div class="button-group">
@@ -188,3 +194,17 @@ include("../config.php");
 </body>
 
 </html>
+<script type="text/javascript">
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#edit_prev').attr('src', e.target.result);
+                $('#preview_img').hide();
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

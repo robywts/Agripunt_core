@@ -36,6 +36,13 @@ include("../config.php");
 
             $article_content = mysqli_real_escape_string($con, $_POST['article_content']);
 
+            if ($_FILES['file']['name'] != '') {
+                for ($i = 0; $i < count($_FILES["file"]["name"]); $i++) {
+                    //echo $_FILES["file"]["size"][$i];exit;
+                    if ((($_FILES["file"]["type"][$i] == "video/mp4") || ($_FILES["file"]["type"][$i] == "audio/mp3") || ($_FILES["file"]["type"][$i] == "audio/wma") || ($_FILES["file"]["type"][$i] == "image/pjpeg") || ($_FILES["file"]["type"][$i] == "image/gif") || ($_FILES["file"]["type"][$i] == "image/jpeg")) && ($_FILES["file"]["size"][$i] > 10485760))
+                        $file_rrror = 1;
+                }
+            }
 // check to make sure both fields are entered
 
             if ($title == '' || $subject_ids == '' || $article_content == '') {
@@ -46,11 +53,13 @@ include("../config.php");
 
 // if either field is blank, display the form again
 //renderForm($firstname, $lastname, $error);
+            } else if (isset($file_rrror)) {
+                $error = 'ERROR: Please select Image/Video having size less than 10MB!';
             } else {
 // save the data to the database
-              $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1";
-             // echo $sql;exit;  
-              mysqli_query($con, "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1")
+                $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1";
+                // echo $sql;exit;  
+                mysqli_query($con, "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1")
 
                     or die(mysqli_error($con));
                 $insert_id = mysqli_insert_id($con);
