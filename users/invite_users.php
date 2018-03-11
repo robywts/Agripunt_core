@@ -42,7 +42,7 @@ include("../config.php");
                 $error = 'ERROR: Email Id already exist. Please use another email.';
             } else {
 
-                mysqli_query($con, "INSERT users SET name='$name', email='$email', status='$status', type='2', password='$password'")
+                mysqli_query($con, "INSERT users SET name='$name', email='$email', status='$status', type='2', password='$password', image_url=''")
 
                     or die(mysqli_error($con));
 // once saved, redirect back to the view page

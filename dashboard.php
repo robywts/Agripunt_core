@@ -1,6 +1,8 @@
 <?php
 include "control.inc";
 include("config.php");
+if ($_SESSION['login_user_type'] == 2)
+    echo "<script language='javascript' type='text/javascript'> location.href='articles/index.php' </script>";
 
 ?>
 <!DOCTYPE html>
@@ -32,37 +34,39 @@ include("config.php");
         ?>
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-white fixed-top" id="mainNav">
-            <a class="navbar-brand desktop" href="index.html"><img src="images/logo.png"></a>
+            <a class="navbar-brand desktop" href="dashboard.php"><img src="images/logo.png"></a>
               <!--<a class="navbar-brand mobile" href="index.html"><img src="images/logo-mobile.png"></a>-->
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-                    <li class="nav-item <?php
-                    if ($active == 'dashboard')
-                        echo 'active';
-                    else
-                        '';
+                    <?php if ($_SESSION["login_user_type"] == 1) { ?>
+                        <li class="nav-item <?php
+                        if ($active == 'dashboard')
+                            echo 'active';
+                        else
+                            '';
 
-                    ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                        <a class="nav-link" href="dashboard.php">
-                            <i class="fa fa-fw fa-dashboard"></i>
-                            <span class="nav-link-text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item  <?php
-                    if ($active == 'users')
-                        echo 'active';
-                    else
-                        '';
+                        ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                            <a class="nav-link" href="dashboard.php">
+                                <i class="fa fa-fw fa-dashboard"></i>
+                                <span class="nav-link-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item  <?php
+                        if ($active == 'users')
+                            echo 'active';
+                        else
+                            '';
 
-                    ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                        <a class="nav-link" href="users/index.php">
-                            <i class="fa fa-fw fa-users"></i>
-                            <span class="nav-link-text">Manage Users</span>
-                        </a>
-                    </li>
+                        ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                            <a class="nav-link" href="users/index.php">
+                                <i class="fa fa-fw fa-users"></i>
+                                <span class="nav-link-text">Manage Users</span>
+                            </a>
+                        </li>
+                    <?php } ?>
                     <li class="nav-item <?php
                     if ($active == 'posts')
                         echo 'active';
@@ -75,86 +79,86 @@ include("config.php");
                             <span class="nav-link-text">Manage Posts</span>
                         </a>
                     </li>
-
-                    <li class="nav-item <?php
-                    if ($active == 'categories')
-                        echo 'active';
-                    else
-                        '';
-
-                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="categories/index.php">
-                            <i class="fa fa-fw fa-newspaper-o"></i>
-                            <span class="nav-link-text">News Categories</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item <?php
-                    if ($active == 'topics')
-                        echo 'active';
-                    else
-                        '';
-
-                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="topics/index.php">
-                            <i class="fa fa-fw fa-newspaper-o"></i>
-                            <span class="nav-link-text">News Topics</span>
-                        </a>
-                    </li>
-
-
-                    <li class="nav-item <?php
-                    if ($active == 'rssfeeds')
-                        echo 'active';
-                    else
-                        '';
-
-                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="rssFeeds/index.php">
-                            <i class="fa fa-fw fa-rss-square"></i>
-                            <span class="nav-link-text">RSS Feeds</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item <?php
-                    if ($active == 'subscribers')
-                        echo 'active';
-                    else
-                        '';
-
-                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="subscribers/index.php">
-                            <i class="fa fa-fw fa-envelope-open"></i>
-                            <span class="nav-link-text">Newletter Subscribers</span>
-                        </a>
-                    </li>
-                    <li class="nav-item <?php
-                    if ($active == 'companies')
-                        echo 'active';
-                    else
-                        '';
-
-                    ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link" href="companies/index.php">
-                            <i class="fa fa-fw fa-building"></i>
-                            <span class="nav-link-text">Companies</span>
-                        </a>
-                    </li>
-
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                        <a class="nav-link <?php
-                        if ($active == 'settings')
+                    <?php if ($_SESSION["login_user_type"] == 1) { ?>
+                        <li class="nav-item <?php
+                        if ($active == 'categories')
                             echo 'active';
                         else
                             '';
 
-                        ?>" href="settings.php">
-                            <i class="fa fa-fw fa-cog"></i>
-                            <span class="nav-link-text">Settings</span>
-                        </a>
-                    </li>
+                        ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                            <a class="nav-link" href="categories/index.php">
+                                <i class="fa fa-fw fa-newspaper-o"></i>
+                                <span class="nav-link-text">News Categories</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item <?php
+                        if ($active == 'topics')
+                            echo 'active';
+                        else
+                            '';
+
+                        ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                            <a class="nav-link" href="topics/index.php">
+                                <i class="fa fa-fw fa-newspaper-o"></i>
+                                <span class="nav-link-text">News Topics</span>
+                            </a>
+                        </li>
 
 
+                        <li class="nav-item <?php
+                        if ($active == 'rssfeeds')
+                            echo 'active';
+                        else
+                            '';
+
+                        ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                            <a class="nav-link" href="rssFeeds/index.php">
+                                <i class="fa fa-fw fa-rss-square"></i>
+                                <span class="nav-link-text">RSS Feeds</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item <?php
+                        if ($active == 'subscribers')
+                            echo 'active';
+                        else
+                            '';
+
+                        ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                            <a class="nav-link" href="subscribers/index.php">
+                                <i class="fa fa-fw fa-envelope-open"></i>
+                                <span class="nav-link-text">Newletter Subscribers</span>
+                            </a>
+                        </li>
+                        <li class="nav-item <?php
+                        if ($active == 'companies')
+                            echo 'active';
+                        else
+                            '';
+
+                        ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                            <a class="nav-link" href="companies/index.php">
+                                <i class="fa fa-fw fa-building"></i>
+                                <span class="nav-link-text">Companies</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
+                            <a class="nav-link <?php
+                            if ($active == 'settings')
+                                echo 'active';
+                            else
+                                '';
+
+                            ?>" href="settings.php">
+                                <i class="fa fa-fw fa-cog"></i>
+                                <span class="nav-link-text">Settings</span>
+                            </a>
+                        </li>
+
+<?php } ?>
                 </ul>
                 <ul class="navbar-nav sidenav-toggler">
                     <li class="nav-item">
@@ -164,7 +168,7 @@ include("config.php");
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    <li class="mr15"><a class="btn btn-primary btn-block " href="add_new_post.html">Add New Post</a>
+                    <li class="mr15"><a class="btn btn-primary btn-block " href="articles/add_new_post.php">Add New Post</a>
 
                     </li>
                     <li class="mr15">
@@ -270,8 +274,8 @@ include("config.php");
 
                                 <div class="dashboard-card-btn">
 
-                                    <a class="btn btn-primary" href="manage_posts.html" id="toggleNavPosition">View  Posts</a>
-                                    <a class="btn btn-primary" href="add_new_post.html" id="toggleNavPosition">Add Post</a>
+                                    <a class="btn btn-primary" href="articles/index.php" id="toggleNavPosition">View  Posts</a>
+                                    <a class="btn btn-primary" href="articles/add_new_post.php" id="toggleNavPosition">Add Post</a>
                                 </div>
 
 
@@ -334,7 +338,7 @@ include("config.php");
 
                                 <div class="dashboard-card-btn">
 
-                                    <a class="btn btn-primary" href="rss_feeds.html" id="toggleNavPosition">View Feeds</a>
+                                    <a class="btn btn-primary" href="rssFeeds/index.php" id="toggleNavPosition">View Feeds</a>
 
                                 </div>
 

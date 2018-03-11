@@ -13,69 +13,123 @@ $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-            <li class="nav-item <?php if($active == 'dashboard') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                <a class="nav-link" href="../dashboard.php">
-                    <i class="fa fa-fw fa-dashboard"></i>
-                    <span class="nav-link-text">Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item  <?php if($active == 'users') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
-                <a class="nav-link" href="../users/index.php">
-                    <i class="fa fa-fw fa-users"></i>
-                    <span class="nav-link-text">Manage Users</span>
-                </a>
-            </li>
-            <li class="nav-item <?php if($active == 'posts') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Charts">
+            <?php if ($_SESSION["login_user_type"] == 1) { ?>
+                <li class="nav-item <?php
+                if ($active == 'dashboard')
+                    echo 'active';
+                else
+                    '';
+
+                ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <a class="nav-link" href="../dashboard.php">
+                        <i class="fa fa-fw fa-dashboard"></i>
+                        <span class="nav-link-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item  <?php
+                if ($active == 'users')
+                    echo 'active';
+                else
+                    '';
+
+                ?>" data-toggle="tooltip" data-placement="right" title="Dashboard">
+                    <a class="nav-link" href="../users/index.php">
+                        <i class="fa fa-fw fa-users"></i>
+                        <span class="nav-link-text">Manage Users</span>
+                    </a>
+                </li>
+            <?php } ?>
+            <li class="nav-item <?php
+            if ($active == 'posts')
+                echo 'active';
+            else
+                '';
+
+            ?>" data-toggle="tooltip" data-placement="right" title="Charts">
                 <a class="nav-link" href="../articles/index.php">
                     <i class="fa fa-fw fa-sticky-note"></i>
                     <span class="nav-link-text">Manage Posts</span>
                 </a>
             </li>
+            <?php if ($_SESSION["login_user_type"] == 1) { ?>
+                <li class="nav-item <?php
+                if ($active == 'categories')
+                    echo 'active';
+                else
+                    '';
 
-            <li class="nav-item <?php if($active == 'categories') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="../categories/index.php">
-                    <i class="fa fa-fw fa-newspaper-o"></i>
-                    <span class="nav-link-text">News Categories</span>
-                </a>
-            </li>
+                ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <a class="nav-link" href="../categories/index.php">
+                        <i class="fa fa-fw fa-newspaper-o"></i>
+                        <span class="nav-link-text">News Categories</span>
+                    </a>
+                </li>
 
-            <li class="nav-item <?php if($active == 'topics') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="../topics/index.php">
-                    <i class="fa fa-fw fa-newspaper-o"></i>
-                    <span class="nav-link-text">News Topics</span>
-                </a>
-            </li>
+                <li class="nav-item <?php
+                if ($active == 'topics')
+                    echo 'active';
+                else
+                    '';
+
+                ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <a class="nav-link" href="../topics/index.php">
+                        <i class="fa fa-fw fa-newspaper-o"></i>
+                        <span class="nav-link-text">News Topics</span>
+                    </a>
+                </li>
 
 
-            <li class="nav-item <?php if($active == 'rssfeeds') echo 'active'; else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="../rssFeeds/index.php">
-                    <i class="fa fa-fw fa-rss-square"></i>
-                    <span class="nav-link-text">RSS Feeds</span>
-                </a>
-            </li>
+                <li class="nav-item <?php
+                if ($active == 'rssfeeds')
+                    echo 'active';
+                else
+                    '';
 
-            <li class="nav-item <?php if ($active == 'subscribers') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="../subscribers/index.php">
-                    <i class="fa fa-fw fa-envelope-open"></i>
-                    <span class="nav-link-text">Newletter Subscribers</span>
-                </a>
-            </li>
-            <li class="nav-item <?php if ($active == 'companies') echo 'active';
-        else ''; ?>" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link" href="../companies/index.php">
-                    <i class="fa fa-fw fa-building"></i>
-                    <span class="nav-link-text">Companies</span>
-                </a>
-            </li>
+                ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <a class="nav-link" href="../rssFeeds/index.php">
+                        <i class="fa fa-fw fa-rss-square"></i>
+                        <span class="nav-link-text">RSS Feeds</span>
+                    </a>
+                </li>
 
-            <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-                <a class="nav-link <?php if($active == 'settings') echo 'active'; else ''; ?>" href="../settings.php">
-                    <i class="fa fa-fw fa-cog"></i>
-                    <span class="nav-link-text">Settings</span>
-                </a>
-            </li>
+                <li class="nav-item <?php
+                if ($active == 'subscribers')
+                    echo 'active';
+                else
+                    '';
 
+                ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <a class="nav-link" href="../subscribers/index.php">
+                        <i class="fa fa-fw fa-envelope-open"></i>
+                        <span class="nav-link-text">Newletter Subscribers</span>
+                    </a>
+                </li>
+                <li class="nav-item <?php
+                if ($active == 'companies')
+                    echo 'active';
+                else
+                    '';
+
+                ?>" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <a class="nav-link" href="../companies/index.php">
+                        <i class="fa fa-fw fa-building"></i>
+                        <span class="nav-link-text">Companies</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
+                    <a class="nav-link <?php
+                    if ($active == 'settings')
+                        echo 'active';
+                    else
+                        '';
+
+                    ?>" href="../settings.php">
+                        <i class="fa fa-fw fa-cog"></i>
+                        <span class="nav-link-text">Settings</span>
+                    </a>
+                </li>
+            <?php } ?>
 
         </ul>
         <ul class="navbar-nav sidenav-toggler">
@@ -89,11 +143,17 @@ $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
             <li class="mr15"><a class="btn btn-primary btn-block " href="../articles/add_new_post.php">Add New Post</a>
 
             </li>
-            <li class="mr15">
-                <a class="btn btn-primary btn-block" href="../users/invite_users.php">Invite Users</a>
-            </li>
+            <?php if ($_SESSION['login_user_type'] == 1) { ?>
+                <li class="mr15">
+                    <a class="btn btn-primary btn-block" href="../users/invite_users.php">Invite Users</a>
+                </li>
+            <?php } ?>
             <li class="">
-                <a class="avtar" href="../logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown"><img src="../uploads/<?php echo $res_user['image_url']; ?>"> Admin-logout  <i class="fa fa-fw fa-caret-down"></i></a>
+                <?php if ($_SESSION['login_user_type'] == 1) { ?>
+                    <a class="avtar" href="../logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown"><img src="../uploads/<?php echo $res_user['image_url']; ?>"> Admin-logout  <i class="fa fa-fw fa-caret-down"></i></a>
+                <?php } else { ?>
+                    <a class="avtar" href="../logout.php" onclick="return confirm('Are you sure want to logout')" id="alertsDropdown">user-logout  <i class="fa fa-fw fa-caret-down"></i></a>
+                <?php } ?>
                 <div class="dropdown-menu show" aria-labelledby="alertsDropdown" style="display:none;">
                     <h6 class="dropdown-header">New Alerts:</h6>
                     <div class="dropdown-divider"></div>

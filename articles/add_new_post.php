@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: text/html; charset=ISO-8859-1");
 include "../control.inc";
 include("../config.php");
 
@@ -57,9 +58,9 @@ include("../config.php");
                 $error = 'ERROR: Please select Image/Video having size less than 10MB!';
             } else {
 // save the data to the database
-                $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1";
+                $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=".$_SESSION['login_user_id'];
                 // echo $sql;exit;  
-                mysqli_query($con, "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=1")
+                mysqli_query($con, $sql)
 
                     or die(mysqli_error($con));
                 $insert_id = mysqli_insert_id($con);

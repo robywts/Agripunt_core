@@ -1,4 +1,5 @@
-<?php session_start();
+<?php
+session_start();
 if (isset($_POST) && isset($_POST['email']) && isset($_POST['password'])) {
     include("config.php");
 
@@ -8,16 +9,20 @@ if (isset($_POST) && isset($_POST['email']) && isset($_POST['password'])) {
         echo "<script type='text/javascript'>alert('Please Enter Email and Password!'); </script>";
         return;
     }
-    $sql = "SELECT * FROM users WHERE email='$username' and type=1";
+    $sql = "SELECT * FROM users WHERE email='$username'";
     $query = mysqli_query($con, $sql);
     if (mysqli_num_rows($query) != 0) {
         $rs = mysqli_fetch_assoc($query);
 
         if (password_verify($_POST['password'], $rs['password'])) {
-            
+
             $_SESSION['login_user'] = $username;
             $_SESSION['login_user_id'] = $rs['id'];
-            echo "<script language='javascript' type='text/javascript'> location.href='dashboard.php' </script>";
+            $_SESSION['login_user_type'] = $rs['type'];
+            if ($rs['type'] == 1)
+                echo "<script language='javascript' type='text/javascript'> location.href='dashboard.php' </script>";
+            else
+                echo "<script language='javascript' type='text/javascript'> location.href='articles/index.php' </script>";
         } else {
             echo "<script type='text/javascript'>alert('Email Or Password Invalid!'); </script>";
         }
