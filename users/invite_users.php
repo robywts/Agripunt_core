@@ -26,7 +26,7 @@ include("../config.php");
 
             $status = mysqli_real_escape_string($con, htmlspecialchars($_POST['status']));
 
-            $password = password_hash($_POST['name'] . '123', PASSWORD_DEFAULT);
+            $password = password_hash($_POST['name'], PASSWORD_DEFAULT);
 
             $select = mysqli_query($con, "SELECT `email` FROM `users` WHERE `email` = '" . $email . "'") or exit(mysql_error());
             if ($name == '' || $email == '' || $status == '') {

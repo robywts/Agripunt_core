@@ -1,6 +1,8 @@
 <?php
 include "control.inc";
 include("config.php");
+if ($_SESSION['login_user_type'] == 2)
+    echo "<script language='javascript' type='text/javascript'> location.href='articles/index.php' </script>";
 
 ?>
 <!DOCTYPE html>

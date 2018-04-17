@@ -30,6 +30,27 @@ if ($_SESSION['login_user_type'] == 2)
         $active = 'dashboard';
         $admin_user = "SELECT * FROM users WHERE type=1";
         $res_user = mysqli_fetch_assoc(mysqli_query($con, $admin_user));
+        //getting counts
+        $user_count = "SELECT count(*) as total_user from users WHERE type=2";
+        $res_count_user = mysqli_fetch_assoc(mysqli_query($con, $user_count));
+
+        $post_count = "SELECT count(*) as total_post from article";
+        $res_count_post = mysqli_fetch_assoc(mysqli_query($con, $post_count));
+
+        $subject_count = "SELECT count(*) as total_subject from subject";
+        $res_count_subject = mysqli_fetch_assoc(mysqli_query($con, $subject_count));
+
+        $topic_count = "SELECT count(*) as total_topic from topic";
+        $res_count_topic = mysqli_fetch_assoc(mysqli_query($con, $topic_count));
+
+        $feed_count = "SELECT count(*) as total_feed from rssfeed";
+        $res_count_feed = mysqli_fetch_assoc(mysqli_query($con, $feed_count));
+
+        $subscriber_count = "SELECT count(*) as total_subscriber from subscribers";
+        $res_count_subscriber = mysqli_fetch_assoc(mysqli_query($con, $subscriber_count));
+
+        $company_count = "SELECT count(*) as total_company from company";
+        $res_count_company = mysqli_fetch_assoc(mysqli_query($con, $company_count));
 
         ?>
         <!-- Navigation-->
@@ -245,7 +266,7 @@ if ($_SESSION['login_user_type'] == 2)
                             <div class="card o-hidden h-100 red">
                                 <div class="card-body">
 
-                                    <div class="mr-5"><div class="count">569</div> 
+                                    <div class="mr-5"><div class="count"><?php echo $res_count_user['total_user']; ?></div> 
                                         <div class="dash-cat">Users</div>                
 
                                     </div>
@@ -265,7 +286,7 @@ if ($_SESSION['login_user_type'] == 2)
                             <div class="card o-hidden h-100 red">
                                 <div class="card-body">
 
-                                    <div class="mr-5"><div class="count">1024</div> 
+                                    <div class="mr-5"><div class="count"><?php echo $res_count_post['total_post'] ?></div> 
                                         <div class="dash-cat">Posts</div>
 
 
@@ -287,7 +308,7 @@ if ($_SESSION['login_user_type'] == 2)
                             <div class="card o-hidden h-100 red">
                                 <div class="card-body">
 
-                                    <div class="mr-5"><div class="count">153</div> 
+                                    <div class="mr-5"><div class="count"><?php echo $res_count_subject['total_subject'] ?></div> 
                                         <div class="dash-cat">News Categories</div>
 
 
@@ -306,7 +327,7 @@ if ($_SESSION['login_user_type'] == 2)
                             <div class="card o-hidden h-100 red">
                                 <div class="card-body">
 
-                                    <div class="mr-5"><div class="count">85</div> 
+                                    <div class="mr-5"><div class="count"><?php echo $res_count_topic['total_topic']; ?></div> 
                                         <div class="dash-cat">News Topics</div>
 
 
@@ -329,7 +350,7 @@ if ($_SESSION['login_user_type'] == 2)
                             <div class="card o-hidden h-100 red">
                                 <div class="card-body">
 
-                                    <div class="mr-5"><div class="count">3</div> 
+                                    <div class="mr-5"><div class="count"><?php echo $res_count_feed['total_feed']; ?></div> 
                                         <div class="dash-cat">RSS Feeds</div>
 
 
@@ -351,7 +372,7 @@ if ($_SESSION['login_user_type'] == 2)
                             <div class="card o-hidden h-100 red">
                                 <div class="card-body">
 
-                                    <div class="mr-5"><div class="count">3015</div> 
+                                    <div class="mr-5"><div class="count"><?php echo $res_count_subscriber['total_subscriber']; ?></div> 
                                         <div class="dash-cat">Newsletter Subscribers</div>
 
 
@@ -373,7 +394,7 @@ if ($_SESSION['login_user_type'] == 2)
                             <div class="card o-hidden h-100 red">
                                 <div class="card-body">
 
-                                    <div class="mr-5"><div class="count">89</div> 
+                                    <div class="mr-5"><div class="count"><?php echo $res_count_company['total_company']; ?></div> 
                                         <div class="dash-cat">Companies</div>
 
 
