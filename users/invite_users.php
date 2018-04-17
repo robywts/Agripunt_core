@@ -32,15 +32,61 @@ include("../config.php");
             if ($name == '' || $email == '' || $status == '') {
 
                 $error = 'ERROR: Please fill in all required fields!';
-            }
-            else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
                 $error = 'ERROR: Please enter a valid email.';
-            }
-
-            else if ($select && mysqli_num_rows($select) != 0) {
+            } else if ($select && mysqli_num_rows($select) != 0) {
                 $error = 'ERROR: Email Id already exist. Please use another email.';
             } else {
+
+                //mail start
+                require_once "../vendor/autoload.php";
+                require ('../vendor/phpmailer/phpmailer/src/PHPMailer.php');
+                require ('../vendor/phpmailer/phpmailer/src/SMTP.php');
+                $actual_link = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]/demo/adminTest";
+                $mail = new \PHPMailer\PHPMailer\PHPMailer();
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+//Enable SMTP debugging. 
+                $mail->CharSet = 'utf-8';
+                $mail->SMTPDebug = 0;
+//Set PHPMailer to use SMTP.
+                $mail->isSMTP();
+//Set SMTP host name                          
+                $mail->Host = 'mail.agripunt.com';
+                $mail->Mailer = "smtp";
+//Set this to true if SMTP host requires authentication to send email
+                $mail->SMTPAuth = true;
+//Provide username and password     
+                $mail->Username = "agripunt15";
+                $mail->Password = "DCT1lbRM8#";
+//If SMTP requires TLS encryption then set it
+                $mail->SMTPSecure = "tls";
+//Set TCP port to connect to 
+                $mail->Port = 587;
+
+                $mail->From = "admin@agripunt.com";
+                $mail->FromName = "Agripunt";
+
+                $mail->addAddress($email, $name);
+
+                $mail->isHTML(true);
+
+                $mail->Subject = "Welcome to Agripunt";
+                $mail->Body = "Please use the below credentials to sign-in to Agripunt.<br>Site Url: ".$actual_link."<br><br><i>Email Address: " . $email . " and Password: " . $name . "</i>";
+                $mail->AltBody = "Please contact Agripunt admin.";
+
+                if (!$mail->send()) {
+                    echo "Mailer Error: " . $mail->ErrorInfo;
+                } else {
+                    // echo "Message has been sent successfully";
+                }//exit;
+                //mail end
 
                 mysqli_query($con, "INSERT users SET name='$name', email='$email', status='$status', type='2', password='$password', image_url=''")
 
