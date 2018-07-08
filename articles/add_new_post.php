@@ -22,7 +22,7 @@ include("../config.php");
 
         $sql_company = "SELECT id, company_name FROM company";
 
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['article_title']) && isset($_POST['subject_ID']) && isset($_POST['article_content'])) {
 
 // get form data, making sure it is valid
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['article_title']));
@@ -58,7 +58,7 @@ include("../config.php");
                 $error = 'ERROR: Please select Image/Video having size less than 10MB!';
             } else {
 // save the data to the database
-                $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=".$_SESSION['login_user_id'];
+                $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=" . $_SESSION['login_user_id'];
                 // echo $sql;exit;  
                 mysqli_query($con, $sql)
 
@@ -128,7 +128,7 @@ include("../config.php");
                             <!-- Breadcrumbs-->
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item active">
-                                    <a href="manage_posts.html">Manage Posts</a>
+                                    <a href="index.php">Manage Posts</a>
                                 </li>
                                 <li class="breadcrumb-item active">
                                     Add New Post
@@ -149,19 +149,33 @@ include("../config.php");
                             }
 
                             ?>
-                            <form  method="post" enctype="multipart/form-data">
+                            <form  method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']; ?>">
                                 <div class="title-field form-group">
                                     <label>Article Title *</label>
-                                    <input type="text" name="article_title" placeholder="Article Title">
+                                    <input id="article_title" type="text" value="<?php if (isset($_POST['article_title'])) echo $_POST['article_title']; ?>" name="article_title" placeholder="Article Title">
                                 </div>
                                 <div class="multi-select-field">
                                     <div class="form-group">
                                         <div class="col-md-12">
                                             <label class="multi-label">Article Subject *</label>
                                             <div class="row">
-                                                <select id="dates-field2" name="subject_ID[]" class="multiselect-ui form-control" multiple="multiple" >
+                                                <select class="js-example-basic-multiple form-control" id="subjectList" name="subject_ID[]" multiple="multiple">
+
                                                     <?php
                                                     $category = mysqli_query($con, $sql_category);
+                                                    if (isset($_POST['subject_ID'])) {
+
+                                                        while ($category_res = mysqli_fetch_assoc($category)) {
+                                                            foreach ($_POST['subject_ID'] as $subject) {
+                                                                $selected_cat = '';
+                                                                if ($subject == $category_res['id']) {
+                                                                    $selected_cat = 'selected';
+                                                                    break;
+                                                                }
+                                                            }
+                                                            echo "<option $selected_cat value = " . $category_res['id'] . ">" . $category_res['subject_name'] . "</option>";
+                                                        }
+                                                    }
                                                     if ($category && mysqli_num_rows($category) != 0) {
                                                         while ($category_res = mysqli_fetch_assoc($category)) {
                                                             echo "<option value = " . $category_res['id'] . ">" . $category_res['subject_name'] . "</option>";
@@ -179,9 +193,21 @@ include("../config.php");
                                         <div class="col-md-12">
                                             <label class="multi-label">Article Topic</label>
                                             <div class="row">
-                                                <select id="dates-field2" name="topic_ID[]" class="multiselect-ui form-control" multiple="multiple" >
+                                                <select class="js-example-basic-multiple form-control" id="topicList" name="topic_ID[]" multiple="multiple">
                                                     <?php
                                                     $topic = mysqli_query($con, $sql_topic);
+                                                    if (isset($_POST['topic_ID'])) {
+                                                        while ($topic_res = mysqli_fetch_assoc($topic)) {
+                                                            foreach ($_POST['topic_ID'] as $restopic) {
+                                                                $selected_topic = '';
+                                                                if ($restopic == $topic_res['id']) {
+                                                                    $selected_topic = 'selected';
+                                                                    break;
+                                                                }
+                                                            }
+                                                            echo "<option $selected_topic value = " . $topic_res['id'] . ">" . $topic_res['topic_name'] . "</option>";
+                                                        }
+                                                    }
                                                     if ($topic && mysqli_num_rows($topic) != 0) {
                                                         while ($topic_res = mysqli_fetch_assoc($topic)) {
                                                             echo "<option value = " . $topic_res['id'] . ">" . $topic_res['topic_name'] . "</option>";
@@ -199,9 +225,22 @@ include("../config.php");
                                         <div class="col-md-12">
                                             <label class="multi-label">Company</label>
                                             <div class="row">
-                                                <select id="dates-field2" name="company_ID[]" class="multiselect-ui form-control" multiple="multiple" >
+                                                <!--<select id="dates-field2" name="company_ID[]" class="multiselect-ui form-control" multiple="multiple" >-->
+                                                <select class="js-example-basic-multiple form-control" id="companyList" name="company_ID[]" multiple="multiple">
                                                     <?php
                                                     $company = mysqli_query($con, $sql_company);
+                                                    if (isset($_POST['company_ID'])) {
+                                                        while ($company_res = mysqli_fetch_assoc($company)) {
+                                                            foreach ($_POST['company_ID'] as $rescompany) {
+                                                                $selected_comp = '';
+                                                                if ($rescompany == $company_res['id']) {
+                                                                    $selected_comp = 'selected';
+                                                                    break;
+                                                                }
+                                                            }
+                                                            echo "<option $selected_comp value = " . $company_res['id'] . ">" . $company_res['company_name'] . "</option>";
+                                                        }
+                                                    }
                                                     if ($company && mysqli_num_rows($company) != 0) {
                                                         while ($company_res = mysqli_fetch_assoc($company)) {
                                                             echo "<option value = " . $company_res['id'] . ">" . $company_res['company_name'] . "</option>";
@@ -232,7 +271,7 @@ include("../config.php");
                                     <div class="row">
                                         <div class="container">
                                             <label class="field-title">Enter Summary</label>
-                                            <textarea name="article_summary" class="text-area"></textarea>
+                                            <textarea name="article_summary" class="text-area"><?php if (isset($_POST['article_summary'])) echo $_POST['article_summary']; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -252,7 +291,7 @@ include("../config.php");
 
                                         <div class="button-group">
 
-                                            <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Save</span></button>
+                                            <button class="btn btn-primary btn-block inlline-block" name="submit" onclick="return validate()"><span>Save</span></button>
                                             <button type="reset" class="btn btn-warning cancel inlline-block">
 
                                                 <span>Cancel</span>
@@ -271,28 +310,57 @@ include("../config.php");
 
                 ?>
                 <script src="../js/editor.js"></script>
-                <script src="../js/multiselect.js"></script>
+                <!--<script src="../js/multiselect.js"></script>-->
                 <script type="text/javascript">
-                                                        $(function () {
-                                                            $('.multiselect-ui').multiselect({
-                                                                includeSelectAllOption: true
-                                                            });
-                                                        });
 
-                                                        function add_file()
-                                                        {
-                                                            $("#file_div").append("<div><input type='file' name='file[]'>&nbsp;<input type='button' value='REMOVE' onclick=remove_file(this);></div>");
-                                                        }
-                                                        function remove_file(ele)
-                                                        {
-                                                            $(ele).parent().remove();
-                                                        }
+                                                function validate() {
+                                                    $("#txtEditor").val($("#txtEditor").Editor("getText"));
+                                                    var title_exist = document.getElementById('article_title').value;
+                                                    var subject_exist = document.getElementById('subjectList').value;
+                                                    var content_exist = document.getElementById('txtEditor').value;
+                                                    
+                                                    if (!title_exist || !subject_exist || !content_exist) {
+                                                        alert('Please fill in all required fields!');
+                                                        return false;
+                                                    } else {
+                                                        return true;
+                                                    }
+                                                }
+                                                /*   $(function () {
+                                                 $('.multiselect-ui').multiselect({
+                                                 includeSelectAllOption: true
+                                                 });
+                                                 });*/
+
+                                                function add_file()
+                                                {
+                                                    $("#file_div").append("<div><input type='file' name='file[]'>&nbsp;<input type='button' value='REMOVE' onclick=remove_file(this);></div>");
+                                                }
+                                                function remove_file(ele)
+                                                {
+                                                    $(ele).parent().remove();
+                                                }
                 </script>
 
                 <script>
                     $(document).ready(function () {
                         $("#txtEditor").Editor();
+                        $("#txtEditor").Editor("setText", '<?php if (isset($_POST['article_content'])) echo str_replace("'", "/", $_POST['article_content']); ?>');
+                        $('.js-example-basic-multiple').select2();
+                        $("#subjectList").select2({
+                            placeholder: "Select Subject(s)",
+                            allowClear: true
+                        });
+                        $("#topicList").select2({
+                            placeholder: "Select Topic(s)",
+                            allowClear: true
+                        });
+                        $("#companyList").select2({
+                            placeholder: "Select Company(s)",
+                            allowClear: true
+                        });
                     });
+
                     $(document).submit(function () {
                         $("#txtEditor").val($("#txtEditor").Editor("getText"));
                     });

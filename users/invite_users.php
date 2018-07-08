@@ -17,7 +17,7 @@ include("../config.php");
         <?php
         $active = "users";
 
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['name']) && isset($_POST['email']) && isset($_POST['status'])) {
 // get form data, making sure it is valid
 
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['name']));
@@ -78,7 +78,7 @@ include("../config.php");
                 $mail->isHTML(true);
 
                 $mail->Subject = "Welcome to Agripunt";
-                $mail->Body = "Please use the below credentials to sign-in to Agripunt.<br>Site Url: ".$actual_link."<br><br><i>Email Address: " . $email . " and Password: " . $name . "</i>";
+                $mail->Body = "Please use the below credentials to sign-in to Agripunt.<br>Site Url: " . $actual_link . "<br><br><i>Email Address: " . $email . " and Password: " . $name . "</i>";
                 $mail->AltBody = "Please contact Agripunt admin.";
 
                 if (!$mail->send()) {
@@ -150,19 +150,19 @@ include("../config.php");
                             <div class="row">
 
 
-                                <form id="userAdd" method="POST">
+                                <form id="userAdd" method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="form-group">
                                         <label class="field-title">Name of User *</label>
-                                        <input type="text" name="name" placeholder="Name of User" class="common-input">
+                                        <input type="text" id="name" name="name" placeholder="Name of User" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Email ID *</label>
-                                        <input type="text" name="email" placeholder="Email"  class="common-input">
+                                        <input type="text" id="email" name="email" placeholder="Email"  class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Status *</label>
                                         <!--<input type="text" placeholder="Status"  class="common-input" disabled>-->
-                                        <select placeholder="Status" name="status" class="common-input">
+                                        <select id="status" placeholder="Status" name="status" class="common-input">
                                             <option value="">Select Status</option>
                                             <option value="1" > Active</option>
                                             <option value="0" >Inactive</option>
@@ -170,7 +170,7 @@ include("../config.php");
                                     </div>
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" id="addArticle" name="submit"  value="Submit"><span>Invite</span></button>
+                                        <button class="btn btn-primary btn-block inlline-block" onclick="return validate()" id="addArticle" name="submit"  value="Submit"><span>Invite</span></button>
                                         <button type="reset" class="btn btn-warning cancel inlline-block" onClick="$(':input').val('');">
 
                                             <span>Cancel</span>
@@ -198,3 +198,17 @@ include("../config.php");
 
 </html>
 
+<script type="text/javascript">
+    function validate() {
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var status = document.getElementById('status').value;
+
+        if (!name || !email || !status) {
+            alert('Please fill in all required fields!');
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>

@@ -22,7 +22,7 @@ include("../config.php");
             $sql_topic = "SELECT * FROM topic WHERE id=$id";
             $res_topic = mysqli_fetch_assoc(mysqli_query($con, $sql_topic));
         }
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['topic_name']) && isset($_POST['topic_title'])) {
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['topic_name']));
 
@@ -113,10 +113,10 @@ include("../config.php");
                             <div class="row">
 
 
-                                <form id="topicAdd" method="POST">
+                                <form id="topicAdd" method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="form-group">
                                         <label class="field-title">Topic Name *</label>
-                                        <input type="text" value="<?php echo $res_topic['topic_name']; ?>" name="topic_name" placeholder="Topic Name" class="common-input">
+                                        <input id="topic_name" type="text" value="<?php echo $res_topic['topic_name']; ?>" name="topic_name" placeholder="Topic Name" class="common-input">
                                     </div>
                                     <div class="title-field form-group">
                                         <label>Topic H1 </label>
@@ -132,11 +132,11 @@ include("../config.php");
                                     </div>
                                     <div class="title-field form-group">
                                         <label>Topic Title *</label>
-                                        <input value="<?php echo $res_topic['topic_title']; ?>" type="text" name="topic_title" placeholder="Topic Title">
+                                        <input id="topic_title" value="<?php echo $res_topic['topic_title']; ?>" type="text" name="topic_title" placeholder="Topic Title">
                                     </div>
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Update</span></button>
+                                        <button class="btn btn-primary btn-block inlline-block" onclick="return validate()" name="submit"><span>Update</span></button>
                                         <button type="reset" class="btn btn-warning cancel inlline-block">
 
                                             <span>Cancel</span>
@@ -160,3 +160,16 @@ include("../config.php");
 </body>
 
 </html>
+<script type="text/javascript">
+    function validate() {
+        var name = document.getElementById('topic_name').value;
+        var title = document.getElementById('topic_title').value;
+
+        if (!name || !title) {
+            alert('Please fill in all required fields!');
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>

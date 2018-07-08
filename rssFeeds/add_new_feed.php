@@ -16,7 +16,7 @@ include("../config.php");
         <?php
         $active = "rssfeeds";
 
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['rss_name']) && isset($_POST['rss_url'])) {
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['rss_name']));
 
@@ -104,10 +104,10 @@ include("../config.php");
                             <div class="row">
 
 
-                                <form id="topicAdd" method="POST">
+                                <form id="topicAdd" method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="form-group">
                                         <label class="field-title">Rss Name *</label>
-                                        <input type="text" name="rss_name" placeholder="Rss Name" class="common-input">
+                                        <input type="text" id="rss_name" name="rss_name" placeholder="Rss Name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Description</label>
@@ -115,7 +115,7 @@ include("../config.php");
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Rss URL *</label>
-                                        <textarea  name="rss_url" class="text-area"></textarea>
+                                        <textarea id="rss_url" name="rss_url" class="text-area"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Status</label>
@@ -127,7 +127,7 @@ include("../config.php");
                                     </div>
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Add</span></button>
+                                        <button class="btn btn-primary btn-block inlline-block" onclick="return validate()" name="submit"><span>Add</span></button>
                                         <button type="reset" class="btn btn-warning cancel inlline-block">
 
                                             <span>Cancel</span>
@@ -157,3 +157,16 @@ include("../config.php");
 </body>
 
 </html>
+<script type="text/javascript">
+    function validate() {
+        var name = document.getElementById('rss_name').value;
+        var url = document.getElementById('rss_url').value;
+
+        if (!name || !url) {
+            alert('Please fill in all required fields!');
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>

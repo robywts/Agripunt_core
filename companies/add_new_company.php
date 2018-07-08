@@ -16,7 +16,7 @@ include("../config.php");
         <?php
         $active = "companies";
 
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['company_name']) && isset($_POST['company_address'])) {
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['company_name']));
 
@@ -126,7 +126,7 @@ include("../config.php");
                         <div class="col-md-12 ">
 
                             <div class="row">
-                                <form id="companyAdd" method="POST" enctype="multipart/form-data">
+                                <form id="companyAdd" method="POST" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="title-field form-group">
                                         <label>Company Title </label>
                                         <input name="company_title" type="text" placeholder="Company Title">
@@ -134,11 +134,11 @@ include("../config.php");
 
                                     <div class="form-group">
                                         <label class="field-title">Company Name *</label>
-                                        <input type="text" name="company_name" placeholder="Company Name" class="common-input">
+                                        <input id="company_name" type="text" name="company_name" placeholder="Company Name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Company Address *</label>
-                                        <textarea name="company_address" class="text-area"></textarea>
+                                        <textarea id="company_address" name="company_address" class="text-area"></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Company Zip</label>
@@ -158,7 +158,7 @@ include("../config.php");
                                     </div>
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Add</span></button>
+                                        <button class="btn btn-primary btn-block inlline-block" onclick="return validate()" name="submit"><span>Add</span></button>
                                         <button type="reset" class="btn btn-warning cancel inlline-block" onClick="$(':input').val('');">
 
                                             <span>Cancel</span>
@@ -167,12 +167,6 @@ include("../config.php");
                                     </div>
                                 </form>
                             </div>
-
-
-
-
-
-
 
                         </div>
                     </div>
@@ -188,3 +182,16 @@ include("../config.php");
 </body>
 
 </html>
+<script type="text/javascript">
+    function validate() {
+        var name = document.getElementById('company_name').value;
+        var addr = document.getElementById('company_address').value;
+
+        if (!name || !addr) {
+            alert('Please fill in all required fields!');
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>

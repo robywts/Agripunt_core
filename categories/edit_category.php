@@ -22,7 +22,7 @@ include("../config.php");
             $sql_category = "SELECT * FROM subject WHERE id=$id";
             $res_category = mysqli_fetch_assoc(mysqli_query($con, $sql_category));
         }
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['subject_name']) && isset($_POST['subject_title'])) {
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['subject_name']));
 
@@ -109,10 +109,10 @@ include("../config.php");
                         <div class="col-md-12 ">
 
                             <div class="row">
-                                <form id="categoryEdit" method="POST">
+                                <form id="categoryEdit" method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="title-field form-group">
                                         <label>Category Title *</label>
-                                        <input name="subject_title" value="<?php echo $res_category['subject_title']; ?>" type="text" placeholder="Category Title">
+                                        <input id="subject_title" name="subject_title" value="<?php echo $res_category['subject_title']; ?>" type="text" placeholder="Category Title">
                                     </div>
                                     <div class="title-field form-group">
                                         <label>Category H1 </label>
@@ -120,7 +120,7 @@ include("../config.php");
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Category Name *</label>
-                                        <input type="text" name="subject_name" value="<?php echo $res_category['subject_name']; ?>" placeholder="Category Name" class="common-input">
+                                        <input type="text" id="subject_name" name="subject_name" value="<?php echo $res_category['subject_name']; ?>" placeholder="Category Name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Meta Description</label>
@@ -133,7 +133,7 @@ include("../config.php");
 
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Update</span></button>
+                                        <button class="btn btn-primary btn-block inlline-block" onclick="return validate()" name="submit"><span>Update</span></button>
                                         <button type="reset" class="btn btn-warning cancel inlline-block" >
 
                                             <span>Cancel</span>
@@ -163,3 +163,16 @@ include("../config.php");
 </body>
 
 </html>
+<script type="text/javascript">
+    function validate() {
+        var name = document.getElementById('subject_name').value;
+        var title = document.getElementById('subject_title').value;
+
+        if (!name || !title) {
+            alert('Please fill in all required fields!');
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>

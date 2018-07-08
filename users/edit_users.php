@@ -19,7 +19,7 @@ if (isset($_POST['search'])) {
         $sql_user = "SELECT * FROM users WHERE id=$id";
         $res_user1 = mysqli_fetch_assoc(mysqli_query($con, $sql_user));
     }
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name']) && isset($_POST['email']) && isset($_POST['status'])) {
         $name = $_POST['name'];
         $email = $_POST['email'];
         $status = $_POST['status'];
@@ -101,19 +101,19 @@ if (isset($_POST['search'])) {
                                     </div>
 
                                 </div>
-                                <form id="userEdit" method="POST">
+                                <form id="userEdit" method="POST" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="form-group">
                                         <label class="field-title">Name of User *</label>
-                                        <input type="text" placeholder="Name" value="<?php echo $res_user1['name']; ?>" name="name" class="common-input">
+                                        <input type="text" id="name" placeholder="Name" value="<?php echo $res_user1['name']; ?>" name="name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Email ID *</label>
-                                        <input type="text" placeholder="Email" value="<?php echo $res_user1['email']; ?>" name="email" class="common-input">
+                                        <input type="text" id="email" placeholder="Email" value="<?php echo $res_user1['email']; ?>" name="email" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Status *</label>
                                         <!--<input type="text" placeholder="Status"  class="common-input" disabled>-->
-                                        <select placeholder="Status" name="status" class="common-input">
+                                        <select id= "status" placeholder="Status" name="status" class="common-input">
                                             <option value="">Select Status</option>
                                             <option value="1" <?php echo $res_user1['status'] == 1 ? 'selected' : ''; ?>> Active</option>
                                             <option value="0" <?php echo $res_user1['status'] == 0 ? 'selected' : ''; ?>>Inactive</option>
@@ -208,7 +208,7 @@ if (isset($_POST['search'])) {
 
                                 <div class="button-group">
 
-                                    <button class="btn btn-primary btn-block inlline-block" id="editArticle" name="submit" onClick="javascript:document.getElementById('userEdit').submit();" value="Submit"><span>Save</span></button>
+                                    <button class="btn btn-primary btn-block inlline-block" id="editArticle"  name="submit" onClick="return validate();" value="Submit"><span>Save</span></button>
                                     <button type="reset" class="btn btn-warning cancel inlline-block" onClick="$(':input').val('');">
 
                                         <span>Cancel</span>
@@ -227,6 +227,18 @@ if (isset($_POST['search'])) {
 
             ?>
             <script>
+                function validate() {
+                    var name = document.getElementById('name').value;
+                    var email = document.getElementById('email').value;
+                    var status = document.getElementById('status').value;
+
+                    if (!name || !email || !status) {
+                        alert('Please fill in all required fields!');
+                        return false;
+                    } else {
+                        document.getElementById('userEdit').submit();
+                    }
+                }
                 $(document).ready(function () {
                     $(".table-responsive input").keyup(function () {
                         var search = true;

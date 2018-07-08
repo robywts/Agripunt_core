@@ -38,7 +38,7 @@ include("../config.php");
 
         $sql_company = "SELECT id, company_name FROM company";
 
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['article_title']) && isset($_POST['subject_ID']) && isset($_POST['article_content'])) {
 // get form data, making sure it is valid
             $title = mysqli_real_escape_string($con, htmlspecialchars($_POST['article_title']));
 
@@ -173,17 +173,17 @@ include("../config.php");
                         <div class="col-md-12 ">
 
                             <div class="row">
-                                <form  method="post" enctype="multipart/form-data">
+                                <form  method="post" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="title-field form-group">
                                         <label>Article Title *</label>
-                                        <input type="text" name="article_title" value="<?php echo $res_article['article_title']; ?>" placeholder="Article Title">
+                                        <input id="article_title" type="text" name="article_title" value="<?php echo $res_article['article_title']; ?>" placeholder="Article Title">
                                     </div>
                                     <div class="multi-select-field">
                                         <div class="form-group">
                                             <div class="col-md-12">
                                                 <label class="multi-label">Article Subject *</label>
                                                 <div class="row">
-                                                    <select id="dates-field2" name="subject_ID[]" class="multiselect-ui form-control" multiple="multiple" >
+                                                    <select class="js-example-basic-multiple form-control" id="subjectList" name="subject_ID[]" multiple="multiple">
                                                         <?php
                                                         $category = mysqli_query($con, $sql_category);
                                                         if ($category && mysqli_num_rows($category) != 0) {
@@ -201,6 +201,7 @@ include("../config.php");
 
                                                         ?>
                                                     </select>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -210,7 +211,7 @@ include("../config.php");
                                             <div class="col-md-12">
                                                 <label class="multi-label">Article Topic</label>
                                                 <div class="row">
-                                                    <select id="dates-field2" name="topic_ID[]" class="multiselect-ui form-control" multiple="multiple" >
+                                                    <select class="js-example-basic-multiple form-control" id="topicList" name="topic_ID[]" multiple="multiple">
                                                         <?php
                                                         $topic = mysqli_query($con, $sql_topic);
                                                         if ($topic && mysqli_num_rows($topic) != 0) {
@@ -237,7 +238,7 @@ include("../config.php");
                                             <div class="col-md-12">
                                                 <label class="multi-label">Company</label>
                                                 <div class="row">
-                                                    <select id="dates-field2" name="company_ID[]" class="multiselect-ui form-control" multiple="multiple" >
+                                                    <select class="js-example-basic-multiple form-control" id="companyList" name="company_ID[]" multiple="multiple">
                                                         <?php
                                                         $company = mysqli_query($con, $sql_company);
                                                         if ($company && mysqli_num_rows($company) != 0) {
@@ -299,7 +300,7 @@ include("../config.php");
 
                                             <div class="button-group">
 
-                                                <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Save</span></button>
+                                                <button class="btn btn-primary btn-block inlline-block" onclick="return validate()" name="submit"><span>Save</span></button>
                                                 <button type="reset" class="btn btn-warning cancel inlline-block">
 
                                                     <span>Cancel</span>
@@ -323,25 +324,52 @@ include("../config.php");
         <script src="../js/editor.js"></script>
         <script src="../js/multiselect.js"></script>
         <script type="text/javascript">
-                                                            $(function () {
-                                                                $('.multiselect-ui').multiselect({
-                                                                    includeSelectAllOption: true
-                                                                });
-                                                            });
+                                                    function validate() {
+                                                        $("#txtEditor").val($("#txtEditor").Editor("getText"));
+                                                        var title_exist = document.getElementById('article_title').value;
+                                                        var subject_exist = document.getElementById('subjectList').value;
+                                                        var content_exist = document.getElementById('txtEditor').value;
 
-                                                            function add_file()
-                                                            {
-                                                                $("#file_div").append("<div><input type='file' name='file[]'>&nbsp;<input type='button' value='REMOVE' onclick=remove_file(this);></div>");
-                                                            }
-                                                            function remove_file(ele)
-                                                            {
-                                                                $(ele).parent().remove();
-                                                            }
+                                                        if (!title_exist || !subject_exist || !content_exist) {
+                                                            alert('Please fill in all required fields!');
+                                                            return false;
+                                                        } else {
+                                                            return true;
+                                                        }
+                                                    }
+                                                    
+                                                    /*  $(function () {
+                                                     $('.multiselect-ui').multiselect({
+                                                     includeSelectAllOption: true
+                                                     });
+                                                     });*/
+
+                                                    function add_file()
+                                                    {
+                                                        $("#file_div").append("<div><input type='file' name='file[]'>&nbsp;<input type='button' value='REMOVE' onclick=remove_file(this);></div>");
+                                                    }
+                                                    function remove_file(ele)
+                                                    {
+                                                        $(ele).parent().remove();
+                                                    }
         </script>
 
         <script>
             $(document).ready(function () {
                 $("#txtEditor").Editor();
+                $('.js-example-basic-multiple').select2();
+                $("#subjectList").select2({
+                    placeholder: "Select Subject(s)",
+                    allowClear: true
+                });
+                $("#topicList").select2({
+                    placeholder: "Select Topic(s)",
+                    allowClear: true
+                });
+                $("#companyList").select2({
+                    placeholder: "Select Company(s)",
+                    allowClear: true
+                });
                 $("#txtEditor").Editor("setText", '<?php echo str_replace("'", "/", $res_article['article_content']); ?>');
             });
             $(document).submit(function () {

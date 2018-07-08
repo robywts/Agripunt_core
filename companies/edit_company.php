@@ -24,7 +24,7 @@ include("../config.php");
             $imgg = $res_company['company_logourl'];
             $prev_image = $res_company['company_logourl'] ? "<p><img style='width: 100px;height: 100px;' src='../uploads/companies/$id/$imgg' />" : '';
         }
-        if (isset($_POST['submit'])) {
+        if (isset($_POST['company_name']) && isset($_POST['company_address'])) {
 // get form data, making sure it is valid
             $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['company_name']));
 
@@ -128,18 +128,18 @@ include("../config.php");
                         <div class="col-md-12 ">
 
                             <div class="row">
-                                <form id="companyEdit" method="POST" enctype="multipart/form-data">
+                                <form id="companyEdit" method="POST" enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF']; ?>">
                                     <div class="title-field form-group">
                                         <label>Company Title </label>
                                         <input name="company_title" type="text" value="<?php echo $res_company['company_title']; ?>" placeholder="Company Title">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Company Name *</label>
-                                        <input type="text" name="company_name" value="<?php echo $res_company['company_name']; ?>" placeholder="Company Name" class="common-input">
+                                        <input type="text" id="company_name" name="company_name" value="<?php echo $res_company['company_name']; ?>" placeholder="Company Name" class="common-input">
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Company Address *</label>
-                                        <textarea name="company_address" class="text-area"><?php echo $res_company['company_address']; ?></textarea>
+                                        <textarea id="company_address" name="company_address" class="text-area"><?php echo $res_company['company_address']; ?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label class="field-title">Company Zip</label>
@@ -164,7 +164,7 @@ include("../config.php");
 
                                     <div class="button-group">
 
-                                        <button class="btn btn-primary btn-block inlline-block" name="submit"><span>Update</span></button>
+                                        <button class="btn btn-primary btn-block inlline-block" onclick="return validate()" name="submit"><span>Update</span></button>
                                         <button type="reset" class="btn btn-warning cancel inlline-block" >
 
                                             <span>Cancel</span>
@@ -205,6 +205,17 @@ include("../config.php");
             }
 
             reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function validate() {
+        var name = document.getElementById('company_name').value;
+        var addr = document.getElementById('company_address').value;
+
+        if (!name || !addr) {
+            alert('Please fill in all required fields!');
+            return false;
+        } else {
+            return true;
         }
     }
 </script>
