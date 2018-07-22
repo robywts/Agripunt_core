@@ -1,6 +1,6 @@
 <?php
 include("../../config.php");
-if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
+if (isset($_POST['submit_btn'])) {
 
 // get form data, making sure it is valid
     $name = mysqli_real_escape_string($con, htmlspecialchars($_POST['sub_name']));
@@ -20,20 +20,28 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
 // if either field is blank, display the form again
 //renderForm($firstname, $lastname, $error);
     } else {
-        $subscribed_date = date("Y-m-d H:i:s");
+//email exist checking
+        $check = "SELECT * FROM subscribers WHERE email = '$email'";
+        $rs = mysqli_query($con, $check);
+        if (!$rs || mysqli_num_rows($rs) == 0) {
+            $subscribed_date = date("Y-m-d H:i:s");
 // save the data to the database
-        mysqli_query($con, "INSERT subscribers SET name='$name', email='$email', subscribed_date='$subscribed_date'")
+            mysqli_query($con, "INSERT subscribers SET name='$name', email='$email', subscribed_date='$subscribed_date'")
 
-            or die(mysqli_error($con));
+                or die(mysqli_error($con));
 //                header("Location: manage_users.php");
-        echo '<script type="text/javascript">';
-        echo "alert('Successfully subscribed')";
-        //echo 'window.location.href="index.php";';
-        echo '</script>';
+            echo "<script>alert('Successfully subscribed');
+              window.location.href='index.php';
+              </script>";
+//header("Location: index.php");
+        } else {
+            echo "<script>alert('Email Already Exists');window.location.href='index.php';</script>";
+        }
     }
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,7 +62,7 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
         <!-- Custom styles for this template -->
         <link href="css/4-col-portfolio.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="css/custom.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="css/slider-pro.min.css" media="screen" />
+        <!--<link rel="stylesheet" type="text/css" href="css/slider-pro.min.css" media="screen" />-->
         <link rel="stylesheet" type="text/css" href="./slick/slick.css">
         <link rel="stylesheet" type="text/css" href="./slick/slick-theme.css">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
@@ -132,12 +140,13 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
                     <!-- Slider Starts -->
                     <?php
                     $condition = '';
-                    $condition .= " AND at.article_published ='1'";
-                    $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_pubdate FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " ORDER BY at.created_at ASC limit 5 offset 0";
+//                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
+                    $condition .= " AND at.user_id='1'";
+                    $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " ORDER BY at.created_at desc limit 5 offset 0";
                     $query = mysqli_query($con, $sql);
                     if ($query && mysqli_num_rows($query) != 0) {
                         $row = mysqli_fetch_all($query);
-                        // print_r($row);exit;
+                        //print_r($row[0]);exit;
                     }
 
                     ?>
@@ -149,11 +158,11 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
                                 <div class="slide-list-wrap">
                                     <div class="col-lg-6 slide-lg">
                                         <div class="row">
-                                            <img src="<?php echo $row[0][3] ?>">
+                                            <img src="../../uploads/articles/<?php echo $row[0][0] . '/' . $row[0][3] ?>">
                                             <div class="slide-news-wrap">
                                                 <div class="category-label"><?php echo $row[0][1] ?></div>
-                                                <h1 class="slide-title"><?php echo $row[0][1] ?></h1>
-                                                <div class="post-date"><?php echo $row[0][4] ?></div>
+                                                <h1 class="slide-title"><?php echo $row[0][4] ?></h1>
+                                                <div class="post-date"><?php echo date('d/m/y',strtotime($row[0][5])) ?></div>
                                             </div>
                                         </div>
                                     </div>
@@ -163,11 +172,11 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
 
                                             <div class="col-lg-6 col-md-6 col-sm-12 slide-sm">
                                                 <div class="row">
-                                                    <img src="<?php echo $row[1][3] ?>">
+                                                    <img src="../../uploads/articles/<?php echo $row[1][0] . '/' . $row[1][3] ?>">
                                                     <div class="slide-news-wrap">
                                                         <div class="category-label"><?php echo $row[1][1] ?></div>
-                                                        <h1 class="slide-title"><?php echo $row[1][1] ?></h1>
-                                                        <div class="post-date"><?php echo $row[1][4] ?></div>
+                                                        <h1 class="slide-title"><?php echo $row[1][4] ?></h1>
+                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[1][5])) ?></div>
                                                     </div>
 
                                                 </div>
@@ -176,30 +185,29 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
 
 
                                             <div class="col-lg-6  col-md-6 col-sm-12 slide-sm">
-                                                <div class="row">
-                                                    <img src="<?php echo $row[2][3] ?>">
+                                                <div class="row"><img src="../../uploads/articles/<?php echo $row[2][0] . '/' . $row[2][3] ?>">
                                                     <div class="slide-news-wrap">
                                                         <div class="category-label"><?php echo $row[2][1] ?></div>
-                                                        <h1 class="slide-title"><?php echo $row[2][1] ?></h1>
-                                                        <div class="post-date"><?php echo $row[2][4] ?></div>
+                                                        <h1 class="slide-title"><?php echo $row[2][4] ?></h1>
+                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[2][5])) ?></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6  col-md-6 col-sm-12 slide-sm">
-                                                <div class="row"> <img src="images/img3.png">
+                                                <div class="row"> <img src="../../uploads/articles/<?php echo $row[3][0] . '/' . $row[3][3] ?>">
                                                     <div class="slide-news-wrap">
-                                                        <div class="category-label">Label</div>
-                                                        <h1 class="slide-title">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </h1>
-                                                        <div class="post-date">10/11/2017</div>
+                                                        <div class="category-label"><?php echo $row[3][1] ?></div>
+                                                        <h1 class="slide-title"><?php echo $row[3][4] ?></h1>
+                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[3][5])) ?></div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-lg-6  col-md-6 col-sm-12 slide-sm">
-                                                <div class="row"> <img src="images/img4.png">
+                                                <div class="row"> <img src="../../uploads/articles/<?php echo $row[4][0] . '/' . $row[4][3] ?>">
                                                     <div class="slide-news-wrap">
-                                                        <div class="category-label">Label</div>
-                                                        <h1 class="slide-title">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </h1>
-                                                        <div class="post-date">10/11/2018</div>
+                                                        <div class="category-label"><?php echo $row[4][1] ?></div>
+                                                        <h1 class="slide-title"><?php echo $row[4][4] ?></h1>
+                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[4][5])) ?></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -523,7 +531,7 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
                         <div class="newsletter-wrap">
                             <input class="form-control" id='sub_name' type="text" name='sub_name' placeholder="Name" id="">
                             <input class="form-control" id='sub_email' type="text" name='sub_email' placeholder="Email" id="">
-                            <input class="form-control submit" onclick="return validate()" type="submit" value="Subscribe" id="">
+                            <input class="form-control submit" onclick="return validate()" type="submit" name="submit_btn" value="Subscribe" id="">
 
                         </div>
                     </form>
@@ -545,11 +553,16 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
             <div class="row">
                 <div class="col-md-3 pl0"><h3>Top Categories</h3>
                     <ul>
-                        <li>Poultry</li>
-                        <li>Pigs</li>
-                        <li>Milk Prices</li>
-                        <li>Egg Prices</li>
-                        <li>Poultry</li>
+                        <?php
+                        $sql_sub = "SELECT sub.subject_name FROM subject as sub ORDER BY sub.id desc limit 5 offset 0";
+                        $query = mysqli_query($con, $sql_sub);
+                        if ($query && mysqli_num_rows($query) != 0) {
+                            while ($row = mysqli_fetch_assoc($query)) {
+                                echo "<li>" . $row['subject_name'] . "</li>";
+                            }
+                        }
+
+                        ?>
                     </ul>
                 </div>
                 <div class="col-md-6 pl0"><h3>About Agripunt</h3>
@@ -566,11 +579,16 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
                 </div>
                 <div class="col-md-3 pl0"><h3>Trending Topics</h3>
                     <ul>
-                        <li>Poultry</li>
-                        <li>Pigs</li>
-                        <li>Milk Prices</li>
-                        <li>Egg Prices</li>
-                        <li>Poultry</li>
+                        <?php
+                        $sql_tp = "SELECT tp.topic_name FROM topic as tp ORDER BY tp.id desc limit 5 offset 0";
+                        $query = mysqli_query($con, $sql_tp);
+                        if ($query && mysqli_num_rows($query) != 0) {
+                            while ($row = mysqli_fetch_assoc($query)) {
+                                echo "<li>" . $row['topic_name'] . "</li>";
+                            }
+                        }
+
+                        ?>
                     </ul>
                 </div>
 
@@ -610,7 +628,13 @@ if (isset($_POST['sub_name']) && isset($_POST['sub_email'])) {
             alert('Please fill in name and email!');
             return false;
         } else {
-            return true;
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if (re.test(String(email).toLowerCase()))
+                return true;
+            else {
+                alert('Invalid email!');
+                return false
+            }
         }
     }
 </script>
