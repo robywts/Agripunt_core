@@ -53,6 +53,10 @@ include("../config.php");
             $article_content = mysqli_real_escape_string($con, $_POST['article_content']);
             $date = date('Y-m-d H:i:s');
 
+            $is_featured = isset($_POST['is_featured']) ? $_POST['is_featured'] : 0;
+            
+            $is_trending = isset($_POST['is_trending']) ? $_POST['is_trending'] : 0;
+
             if ($_FILES['file']['name'] != '') {
                 for ($i = 0; $i < count($_FILES["file"]["name"]); $i++) {
                     //echo $_FILES["file"]["size"][$i];exit;
@@ -75,7 +79,7 @@ include("../config.php");
             } else {
                 $article_user = $res_article['user_id'];
 // save the data to the database
-                $sql = "UPDATE article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id='$article_user', updated_at='" . $date . "' where article.id= $id";
+                $sql = "UPDATE article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', is_featured='$is_featured', is_trending='$is_trending', user_id='$article_user', updated_at='" . $date . "' where article.id= $id";
                 $res = mysqli_query($con, $sql);
 
                 $result2 = mysqli_query($con, "DELETE FROM article_subject WHERE article_ID=$id");
@@ -260,6 +264,16 @@ include("../config.php");
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="multi-select-field">
+                                        <div class="checkboxes">
+                                            <input type="checkbox" name="is_featured" value="1" <?php echo $res_article['is_featured'] ? 'checked' : ''; ?> ><label> Featured</label>
+                                        </div>
+                                    </div>
+                                    <div class="multi-select-field">
+                                        <div class="checkboxes">
+                                            <input type="checkbox" name="is_trending" value="1" <?php echo $res_article['is_trending'] ? 'checked' : ''; ?> ><label> Trending</label>
+                                        </div>
+                                    </div>
                                     <div class="col-md12 multi-file-select">
                                         <div class="row">
                                             <div class="container">
@@ -337,7 +351,7 @@ include("../config.php");
                                                             return true;
                                                         }
                                                     }
-                                                    
+
                                                     /*  $(function () {
                                                      $('.multiselect-ui').multiselect({
                                                      includeSelectAllOption: true
@@ -380,3 +394,12 @@ include("../config.php");
 
     </body>
 </html>
+<style>
+    .checkboxes input{
+        margin: 0px 0px 15px 0px;
+    }
+    .checkboxes label{
+        margin: 0px 20px 0px 3px;
+        font-weight: bold;
+    }
+</style>

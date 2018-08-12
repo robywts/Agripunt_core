@@ -32,3 +32,10 @@ ALTER TABLE `article` CHANGE `created_at` `created_at` TIMESTAMP NOT NULL DEFAUL
 ALTER TABLE `article` CHANGE `updated_at` `updated_at` TIMESTAMP NULL DEFAULT NULL;
 ALTER TABLE `article_image` CHANGE `created_at` `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE `article_image` CHANGE `updated_at` `updated_at` TIMESTAMP NULL DEFAULT NULL;
+
+**********22-July-2018************
+ALTER TABLE `article` ADD `is_featured` ENUM('0','1') NOT NULL DEFAULT '0' AFTER `sort_order`;
+
+**********11-August-2018************
+ALTER TABLE `article` ADD `is_trending` ENUM('0','1') NOT NULL AFTER `is_featured`;
+ALTER TABLE `article` CHANGE `is_trending` `is_trending` ENUM('0','1') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0';

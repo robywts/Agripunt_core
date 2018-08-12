@@ -141,8 +141,8 @@ if (isset($_POST['submit_btn'])) {
                     <?php
                     $condition = '';
 //                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
-                    $condition .= " AND at.user_id='1'";
-                    $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " ORDER BY at.created_at desc limit 5 offset 0";
+                    $condition .= " AND at.user_id='1' AND at.is_featured='0' AND at.is_trending='0'";
+                    $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " GROUP BY at.id ORDER BY at.created_at desc limit 5 offset 0";
                     $query = mysqli_query($con, $sql);
                     if ($query && mysqli_num_rows($query) != 0) {
                         $row = mysqli_fetch_all($query);
@@ -158,72 +158,44 @@ if (isset($_POST['submit_btn'])) {
                                 <div class="slide-list-wrap">
                                     <div class="col-lg-6 slide-lg">
                                         <div class="row">
-                                            <img src="../../uploads/articles/<?php echo $row[0][0] . '/' . $row[0][3] ?>">
+                                            <?php
+                                            $img_org = $row[0][3] ? "../../uploads/articles/" . $row[0][0] . '/' . $row[0][3] : '';
+                                            $img_src = file_exists("../../uploads/articles/" . $row[0][0] . '/' . $row[0][3]) ? $img_org : './images/no_images.jpg';
+
+                                            ?>
+                                            <img src="<?php echo $img_src ?>">
                                             <div class="slide-news-wrap">
                                                 <div class="category-label"><?php echo $row[0][1] ?></div>
                                                 <h1 class="slide-title"><?php echo $row[0][4] ?></h1>
-                                                <div class="post-date"><?php echo date('d/m/y',strtotime($row[0][5])) ?></div>
+                                                <div class="post-date"><?php echo date('d/m/y', strtotime($row[0][5])) ?></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12" style="float:left">
                                         <div class="row">
 
+                                            <?php
+                                            for ($j = 1; $j < 5; $j++) {
+                                                $img_org = $row[$j][3] ? "../../uploads/articles/" . $row[$j][0] . '/' . $row[$j][3] : '';
+                                                $img_src = file_exists("../../uploads/articles/" . $row[$j][0] . '/' . $row[$j][3]) ? $img_org : './images/no_images_small.jpg';
 
-                                            <div class="col-lg-6 col-md-6 col-sm-12 slide-sm">
-                                                <div class="row">
-                                                    <img src="../../uploads/articles/<?php echo $row[1][0] . '/' . $row[1][3] ?>">
-                                                    <div class="slide-news-wrap">
-                                                        <div class="category-label"><?php echo $row[1][1] ?></div>
-                                                        <h1 class="slide-title"><?php echo $row[1][4] ?></h1>
-                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[1][5])) ?></div>
-                                                    </div>
+                                                ?>
+                                                <div class="col-lg-6 col-md-6 col-sm-12 slide-sm">
+                                                    <div class="row">
+                                                        <img src="<?php echo $img_src; ?>">
+                                                        <div class="slide-news-wrap">
+                                                            <div class="category-label"><?php echo $row[$j][1] ?></div>
+                                                            <h1 class="slide-title"><?php echo $row[$j][4] ?></h1>
+                                                            <div class="post-date"><?php echo date('d/m/y', strtotime($row[$j][5])) ?></div>
+                                                        </div>
 
-                                                </div>
-                                            </div>
-
-
-
-                                            <div class="col-lg-6  col-md-6 col-sm-12 slide-sm">
-                                                <div class="row"><img src="../../uploads/articles/<?php echo $row[2][0] . '/' . $row[2][3] ?>">
-                                                    <div class="slide-news-wrap">
-                                                        <div class="category-label"><?php echo $row[2][1] ?></div>
-                                                        <h1 class="slide-title"><?php echo $row[2][4] ?></h1>
-                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[2][5])) ?></div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-6  col-md-6 col-sm-12 slide-sm">
-                                                <div class="row"> <img src="../../uploads/articles/<?php echo $row[3][0] . '/' . $row[3][3] ?>">
-                                                    <div class="slide-news-wrap">
-                                                        <div class="category-label"><?php echo $row[3][1] ?></div>
-                                                        <h1 class="slide-title"><?php echo $row[3][4] ?></h1>
-                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[3][5])) ?></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6  col-md-6 col-sm-12 slide-sm">
-                                                <div class="row"> <img src="../../uploads/articles/<?php echo $row[4][0] . '/' . $row[4][3] ?>">
-                                                    <div class="slide-news-wrap">
-                                                        <div class="category-label"><?php echo $row[4][1] ?></div>
-                                                        <h1 class="slide-title"><?php echo $row[4][4] ?></h1>
-                                                        <div class="post-date"><?php echo date('d/m/y',strtotime($row[4][5])) ?></div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
-
-
-
-
-
                             </section>
-
-
-
-
                         </div>
                     </div>
 
@@ -236,92 +208,55 @@ if (isset($_POST['submit_btn'])) {
                 <!-- Page Heading -->
                 <h2 class="sub-head"><span class="orange-txt">Featured</span> News
                 </h2>
+                <?php
+                $condition1 = '';
+//                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
+                $condition1 .= " AND at.user_id='1' AND at.is_featured='1'";
+                $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition1 . " GROUP BY at.id ORDER BY at.created_at desc limit 10 offset 0";
+                $query = mysqli_query($con, $sql);
+                if ($query && mysqli_num_rows($query) != 0) {
+                    $rowFeatured = mysqli_fetch_all($query);
+                    //print_r($row[0]);exit;
+                }
 
+                ?>
                 <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
+                    <?php
+                    for ($k = 0; $k < 8; $k++) {
+                        if (!empty($rowFeatured[$k])) {
+                            $img_org = $rowFeatured[$k][3] ? "../../uploads/articles/" . $rowFeatured[$k][0] . '/' . $rowFeatured[$k][3] : '';
+                            $img_src = file_exists("../../uploads/articles/" . $rowFeatured[$k][0] . '/' . $rowFeatured[$k][3]) ? $img_org : './images/no_images_small.jpg';
+
+                            ?>
+                            <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
+                                <div class="card h-100">
+                                    <a href="#"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
+                                    <div class="card-body">
+                                        <div class="category-label"><?php echo $rowFeatured[$k][1]; ?></div>
+                                        <p class="card-text"><?php echo $rowFeatured[$k][4]; ?></p>
+                                        <div class="post-date"><?php echo date('d/m/y', strtotime($rowFeatured[$k][5])); ?></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
+                        <?php } else { ?>
+                            <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
+                                <div class="card h-100">
+                                    <a href="#"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
+                                    <div class="card-body">
+                                        <div class="category-label">No Article Exist</div>
+                                        <p class="card-text"></p>
+                                        <div class="post-date"></div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                        <div class="card h-100">
-                            <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                            <div class="card-body">
-                                <div class="category-label">Label</div>
-                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                <div class="post-date">10/11/2017</div>
-                            </div>
-                        </div>
-                    </div>
+                            <?php
+                        }
+                    }
+
+                    ?>
+
                 </div>
                 <!-- /.row -->
-
-
             </div>
         </div>
         <!-- /.container -->
@@ -337,36 +272,49 @@ if (isset($_POST['submit_btn'])) {
                         <!-- Page Heading -->
                         <h2 class="sub-head  clear-both width100pers"><span class="orange-txt">Trending</span> Topics
                         </h2><div class="row">
-                            <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
-                                <div class="card h-100">
-                                    <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                    <div class="card-body">
-                                        <div class="category-label">Label</div>
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                        <div class="post-date">10/11/2017</div>
+                            <?php
+                            $condition2 = '';
+//                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
+                            $condition2 .= " AND at.user_id='1' AND at.is_trending='1'";
+                            $sqlTrend = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition2 . " GROUP BY at.id ORDER BY at.created_at desc limit 3 offset 0";
+                            $queryTrend = mysqli_query($con, $sqlTrend);
+                            if ($query && mysqli_num_rows($queryTrend) != 0) {
+                                $rowTrend = mysqli_fetch_all($queryTrend);
+                                //print_r($row[0]);exit;
+                            }
+
+                            for ($l = 0; $l < 3; $l++) {
+                                if (!empty($rowTrend[$l])) {
+                                    $img_org = $rowTrend[$l][3] ? "../../uploads/articles/" . $rowTrend[$l][0] . '/' . $rowTrend[$l][3] : '';
+                                    $img_src = file_exists("../../uploads/articles/" . $rowTrend[$l][0] . '/' . $rowTrend[$l][3]) ? $img_org : './images/no_images_small.jpg';
+
+                                    ?> 
+                                    <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
+                                        <div class="card h-100">
+                                            <a href="#"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
+                                            <div class="card-body">
+                                                <div class="category-label"><?php echo $rowTrend[$l][1] ?></div>
+                                                <p class="card-text"><?php echo $rowTrend[$l][4] ?></p>
+                                                <div class="post-date"><?php echo date('d/m/y', strtotime($rowTrend[$l][5])) ?></div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
-                                <div class="card h-100">
-                                    <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                    <div class="card-body">
-                                        <div class="category-label">Label</div>
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                        <div class="post-date">10/11/2017</div>
+                                <?php } else { ?>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
+                                        <div class="card h-100">
+                                            <a href="#"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
+                                            <div class="card-body">
+                                                <div class="category-label">No Article Exist</div>
+                                                <p class="card-text"> </p>
+                                                <div class="post-date"> </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
-                                <div class="card h-100">
-                                    <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                    <div class="card-body">
-                                        <div class="category-label">Label</div>
-                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                        <div class="post-date">10/11/2017</div>
-                                    </div>
-                                </div>
-                            </div>
+                                    <?php
+                                }
+                            }
+
+                            ?>
                         </div>
 
                         <div class="col-md-7 row">
@@ -458,67 +406,50 @@ if (isset($_POST['submit_btn'])) {
                         <div class="col-md-5 pl25 pr0">
                             <h2 class="sub-head clear-both width100pers"><span class="orange-txt">Recent</span> News
                             </h2><div class="row">
-                                <div class="col-md-6 portfolio-item pr0">
-                                    <div class="card h-100">
-                                        <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                        <div class="card-body">
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 portfolio-item pr0">
-                                    <div class="card h-100">
-                                        <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                        <div class="card-body">
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
-                                </div> 
 
-                                <div class="col-md-6 portfolio-item pr0">
-                                    <div class="card h-100">
-                                        <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                        <div class="card-body">
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                            <div class="post-date">10/11/2017</div>
+                                <?php
+                                $condition = '';
+//                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
+                                $condition .= " AND at.user_id='1' AND at.is_featured='0' AND at.is_trending='0'";
+                                $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " GROUP BY at.id ORDER BY at.created_at desc limit 5 offset 0";
+                                $query = mysqli_query($con, $sql);
+                                if ($query && mysqli_num_rows($query) != 0) {
+                                    $rowRecent = mysqli_fetch_all($query);
+                                    //print_r($row[0]);exit;
+                                }
+                                for ($m = 0; $m < 8; $m++) {
+                                    if (!empty($rowRecent[$m])) {
+                                        $img_org = $rowRecent[$m][3] ? "../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3] : '';
+                                        $img_src = file_exists("../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3]) ? $img_org : './images/no_images_small.jpg';
+
+                                        ?>
+                                        <div class="col-md-6 portfolio-item pr0">
+                                            <div class="card h-100">
+                                                <a href="#"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
+                                                <div class="card-body">
+                                                    <div class="category-label"><?php echo $rowRecent[$m][1] ?></div>
+                                                    <p class="card-text"><?php echo $rowRecent[$m][4] ?> </p>
+                                                    <div class="post-date"><?php echo date('d/m/y', strtotime($rowRecent[$m][5])) ?></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 portfolio-item pr0">
-                                    <div class="card h-100">
-                                        <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                        <div class="card-body">
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                            <div class="post-date">10/11/2017</div>
+                                    <?php } else { ?>
+                                        <div class="col-md-6 portfolio-item pr0">
+                                            <div class="card h-100">
+                                                <a href="#"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
+                                                <div class="card-body">
+                                                    <div class="category-label">No Article Exist</div>
+                                                    <p class="card-text"></p>
+                                                    <div class="post-date"></div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 portfolio-item pr0">
-                                    <div class="card h-100">
-                                        <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                        <div class="card-body">
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 portfolio-item pr0">
-                                    <div class="card h-100">
-                                        <a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a>
-                                        <div class="card-body">
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                    <?php }
+                                }
+
+                                ?>
+
                             </div>
 
 
@@ -577,7 +508,7 @@ if (isset($_POST['submit_btn'])) {
                         <li><i class="fa fa-youtube"></i></li>
                     </ul>
                 </div>
-                <div class="col-md-3 pl0"><h3>Trending Topics</h3>
+                <div class="col-md-3 pl0"><h3>Topics</h3>
                     <ul>
                         <?php
                         $sql_tp = "SELECT tp.topic_name FROM topic as tp ORDER BY tp.id desc limit 5 offset 0";

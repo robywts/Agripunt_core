@@ -37,6 +37,10 @@ include("../config.php");
 
             $article_content = mysqli_real_escape_string($con, $_POST['article_content']);
 
+            $is_featured = isset($_POST['is_featured']) ? $_POST['is_featured'] : 0;
+            
+            $is_trending = isset($_POST['is_trending']) ? $_POST['is_trending'] : 0;
+
             if ($_FILES['file']['name'] != '') {
                 for ($i = 0; $i < count($_FILES["file"]["name"]); $i++) {
                     //echo $_FILES["file"]["size"][$i];exit;
@@ -58,7 +62,7 @@ include("../config.php");
                 $error = 'ERROR: Please select Image/Video having size less than 10MB!';
             } else {
 // save the data to the database
-                $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', user_id=" . $_SESSION['login_user_id'];
+                $sql = "INSERT article SET article_title='$title', article_summary='$article_summary', article_content='$article_content', is_featured='$is_featured', is_trending='$is_trending', user_id=" . $_SESSION['login_user_id'];
                 // echo $sql;exit;  
                 mysqli_query($con, $sql)
 
@@ -253,6 +257,16 @@ include("../config.php");
                                         </div>
                                     </div>
                                 </div>
+                                <div class="multi-select-field">
+                                    <div class="checkboxes">
+                                        <input type="checkbox" name="is_featured" value="1" ><label> Featured</label>
+                                    </div>
+                                </div>
+                                <div class="multi-select-field">
+                                    <div class="checkboxes">
+                                        <input type="checkbox" name="is_trending" value="1" ><label> Trending</label>
+                                    </div>
+                                </div>
                                 <div class="col-md12 multi-file-select">
                                     <div class="row">
                                         <div class="container">
@@ -318,7 +332,7 @@ include("../config.php");
                                                     var title_exist = document.getElementById('article_title').value;
                                                     var subject_exist = document.getElementById('subjectList').value;
                                                     var content_exist = document.getElementById('txtEditor').value;
-                                                    
+
                                                     if (!title_exist || !subject_exist || !content_exist) {
                                                         alert('Please fill in all required fields!');
                                                         return false;
@@ -370,3 +384,12 @@ include("../config.php");
 
                 </body>
                 </html>
+                <style>
+                    .checkboxes input{
+                        margin: 0px 0px 15px 0px;
+                    }
+                    .checkboxes label{
+                        margin: 0px 20px 0px 3px;
+                        font-weight: bold;
+                    }
+                </style>
