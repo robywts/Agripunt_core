@@ -17,6 +17,9 @@ body{
 .pl25{
     padding-left: 25px;
 }
+.mt0{
+    margin-top: 0px!important;
+}
 input,  input.form-control{
     border-radius: 0;
 }
@@ -375,6 +378,50 @@ ul.latest-news li:last-child{
      font-size: 12px;
      width:auto;
 }
+
+/* POst Details Page*/
+.post-details-page-wrap{
+    margin-top:30px;
+    margin-bottom: 30px;
+}
+.post-details-thumb-img{
+    width: 100%;
+    height: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: left;
+}
+.post-details-thumb-img  img {
+    flex-shrink: 0;
+    min-width: 100%;
+    min-height: 100%
+}
+.post-details-title{
+    padding: 20px 0 5px 0;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 30px;
+}
+.post-details-title h1{
+    font-size:24px;
+    margin: 0;
+    padding: 5px 0 5px 0;
+    font-weight: 400;
+    color: #333;
+}
+.post-details-title .post-date{
+color: #333;
+padding-left:5px;
+}
+.ads-home-right{
+
+
+}
+.ads-home-right img{
+
+}
  @media (min-width: 992px) body {
      padding-top: 0px;
+}
 }

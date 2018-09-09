@@ -68,11 +68,15 @@ if (isset($_POST['submit_btn'])) {
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 
         <style type="text/css">
+            #html5-watermark {
+                display:none !important;
+            }
         </style>
+        <script type="text/javascript" src="./plugin/html5lightbox/jquery.js"></script>
+        <script type="text/javascript" src="./plugin/html5lightbox/html5lightbox.js"></script>
     </head>
 
     <body>
-
         <!-- Navigation -->
         <div class="container-fluid nav-header">
             <div class="container  clear">
@@ -89,8 +93,6 @@ if (isset($_POST['submit_btn'])) {
             <div class="container"> <a class="navbar-brand" href="#"><img src="images/agripunt_logo.png"></a></div>
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark ">
-
-
             <div class="full-width-wrap">
                 <div class="container"><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -142,12 +144,13 @@ if (isset($_POST['submit_btn'])) {
                     $condition = '';
 //                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
                     $condition .= " AND at.user_id='1' AND at.is_featured='0' AND at.is_trending='0'";
-                    $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " GROUP BY at.id ORDER BY at.created_at desc limit 5 offset 0";
+                    $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " GROUP BY at.id ORDER BY at.created_at desc limit 50 offset 0";
                     $query = mysqli_query($con, $sql);
                     if ($query && mysqli_num_rows($query) != 0) {
                         $row = mysqli_fetch_all($query);
                         //print_r($row[0]);exit;
                     }
+                    $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
                     ?>
                     <div class="col-lg-12">
@@ -159,39 +162,60 @@ if (isset($_POST['submit_btn'])) {
                                     <div class="col-lg-6 slide-lg">
                                         <div class="row">
                                             <?php
-                                            $img_org = $row[0][3] ? "../../uploads/articles/" . $row[0][0] . '/' . $row[0][3] : '';
-                                            $img_src = file_exists("../../uploads/articles/" . $row[0][0] . '/' . $row[0][3]) ? $img_org : './images/no_images.jpg';
+                                            $p = 0;
+                                            $set = 0;
+                                            while ($p < count($row) && $set == 0) {
+                                                $img_org = $row[$p][3] ? "../../uploads/articles/" . $row[$p][0] . '/' . $row[$p][3] : '';
+                                                $img_src = file_exists("../../uploads/articles/" . $row[$p][0] . '/' . $row[$p][3]) ? $img_org : './images/no_images.jpg';
+
+                                                $file_type1 = $row[$p][3] ? finfo_file($finfo, "../../uploads/articles/" . $row[$p][0] . '/' . $row[$p][3]) : '';
+                                                if (strstr($file_type1, "image/") || !$row[$p][3]) {
+
+                                                    ?>
+                                                    <a href="./post_details.php?id=<?php echo $row[$p][0]; ?>"><img src="<?php echo $img_src ?>"></a>;
+                                                    <div class="slide-news-wrap">
+                                                        <div class="category-label"><?php echo $row[$p][1] ?></div>
+                                                        <h1 class="slide-title"><?php echo $row[$p][4] ?></h1>
+                                                        <div class="post-date"><?php echo date('d/m/y', strtotime($row[$p][5])) ?></div>
+                                                    </div>
+                                                    <?php
+                                                    $set = 1;
+                                                } $p++;
+                                            }
 
                                             ?>
-                                            <img src="<?php echo $img_src ?>">
-                                            <div class="slide-news-wrap">
-                                                <div class="category-label"><?php echo $row[0][1] ?></div>
-                                                <h1 class="slide-title"><?php echo $row[0][4] ?></h1>
-                                                <div class="post-date"><?php echo date('d/m/y', strtotime($row[0][5])) ?></div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-12 col-sm-12" style="float:left">
                                         <div class="row">
 
                                             <?php
-                                            for ($j = 1; $j < 5; $j++) {
+                                            $j = $p;
+                                            $set2 = 0;
+                                            while ($j < count($row) && $set2 < 4) {
                                                 $img_org = $row[$j][3] ? "../../uploads/articles/" . $row[$j][0] . '/' . $row[$j][3] : '';
                                                 $img_src = file_exists("../../uploads/articles/" . $row[$j][0] . '/' . $row[$j][3]) ? $img_org : './images/no_images_small.jpg';
+                                                $file_type = $row[$j][3] ? finfo_file($finfo, "../../uploads/articles/" . $row[$j][0] . '/' . $row[$j][3]) : '';
+                                                if (strstr($file_type, "image/") || !$row[$j][3]) {
 
-                                                ?>
-                                                <div class="col-lg-6 col-md-6 col-sm-12 slide-sm">
-                                                    <div class="row">
-                                                        <img src="<?php echo $img_src; ?>">
-                                                        <div class="slide-news-wrap">
-                                                            <div class="category-label"><?php echo $row[$j][1] ?></div>
-                                                            <h1 class="slide-title"><?php echo $row[$j][4] ?></h1>
-                                                            <div class="post-date"><?php echo date('d/m/y', strtotime($row[$j][5])) ?></div>
+                                                    ?>
+                                                    <div class="col-lg-6 col-md-6 col-sm-12 slide-sm">
+                                                        <div class="row">
+                                                            <a href="./post_details.php?id=<?php echo $row[$j][0]; ?>"><img src="<?php echo $img_src; ?>"></a>
+                                                            <div class="slide-news-wrap">
+                                                                <div class="category-label"><?php echo $row[$j][1] ?></div>
+                                                                <h1 class="slide-title"><?php echo $row[$j][4] ?></h1>
+                                                                <div class="post-date"><?php echo date('d/m/y', strtotime($row[$j][5])) ?></div>
+                                                            </div>
+
                                                         </div>
-
                                                     </div>
-                                                </div>
-                                            <?php } ?>
+                                                    <?php
+                                                    $set2++;
+                                                } $j++;
+                                            }
+
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -212,7 +236,7 @@ if (isset($_POST['submit_btn'])) {
                 $condition1 = '';
 //                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
                 $condition1 .= " AND at.user_id='1' AND at.is_featured='1'";
-                $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition1 . " GROUP BY at.id ORDER BY at.created_at desc limit 10 offset 0";
+                $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition1 . " GROUP BY at.id ORDER BY at.created_at desc limit 50 offset 0";
                 $query = mysqli_query($con, $sql);
                 if ($query && mysqli_num_rows($query) != 0) {
                     $rowFeatured = mysqli_fetch_all($query);
@@ -222,23 +246,50 @@ if (isset($_POST['submit_btn'])) {
                 ?>
                 <div class="row">
                     <?php
-                    for ($k = 0; $k < 8; $k++) {
+                    $setFeat = 0;
+                    for ($k = 0; $k < count($rowFeatured) && $setFeat < 8; $k++) {
                         if (!empty($rowFeatured[$k])) {
                             $img_org = $rowFeatured[$k][3] ? "../../uploads/articles/" . $rowFeatured[$k][0] . '/' . $rowFeatured[$k][3] : '';
                             $img_src = file_exists("../../uploads/articles/" . $rowFeatured[$k][0] . '/' . $rowFeatured[$k][3]) ? $img_org : './images/no_images_small.jpg';
 
-                            ?>
-                            <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
-                                <div class="card h-100">
-                                    <a href="#"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
-                                    <div class="card-body">
-                                        <div class="category-label"><?php echo $rowFeatured[$k][1]; ?></div>
-                                        <p class="card-text"><?php echo $rowFeatured[$k][4]; ?></p>
-                                        <div class="post-date"><?php echo date('d/m/y', strtotime($rowFeatured[$k][5])); ?></div>
+                            $file_type_feat = $rowFeatured[$k][3] ? finfo_file($finfo, "../../uploads/articles/" . $rowFeatured[$k][0] . '/' . $rowFeatured[$k][3]) : '';
+                            if (strstr($file_type_feat, "image/") || !$rowFeatured[$k][3]) {
+
+                                ?>
+                                <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
+                                    <div class="card h-100">
+                                        <a href="./post_details.php?id=<?php echo $rowFeatured[$k][0]; ?>"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
+                                        <div class="card-body">
+                                            <div class="category-label"><?php echo $rowFeatured[$k][1]; ?></div>
+                                            <p class="card-text"><?php echo $rowFeatured[$k][4]; ?></p>
+                                            <div class="post-date"><?php echo date('d/m/y', strtotime($rowFeatured[$k][5])); ?></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php } else { ?>
+                                <?php
+                                $setFeat++;
+                            }
+                            if ($rowFeatured[$k][3] && !(strstr($file_type_feat, "image/"))) {
+
+                                ?>
+                                <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
+                                    <div class="card h-100">
+                                        <a href="./post_details.php?id=<?php echo $rowFeatured[$k][0]; ?>"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
+                                        <div class="card-body">
+                                            <div class="category-label"><?php echo $rowFeatured[$k][1]; ?></div>
+                                            <p class="card-text"><?php echo $rowFeatured[$k][4]; ?></p>
+                                            <div class="post-date"><?php echo date('d/m/y', strtotime($rowFeatured[$k][5])); ?></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <?php
+                                $setFeat++;
+                            }
+                        } else {
+
+                            ?>
                             <div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
                                 <div class="card h-100">
                                     <a href="#"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
@@ -250,6 +301,7 @@ if (isset($_POST['submit_btn'])) {
                                 </div>
                             </div>
                             <?php
+                            $setFeat++;
                         }
                     }
 
@@ -274,32 +326,59 @@ if (isset($_POST['submit_btn'])) {
                         </h2><div class="row">
                             <?php
                             $condition2 = '';
+                            $setTrend = 0;
 //                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
                             $condition2 .= " AND at.user_id='1' AND at.is_trending='1'";
-                            $sqlTrend = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition2 . " GROUP BY at.id ORDER BY at.created_at desc limit 3 offset 0";
+                            $sqlTrend = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition2 . " GROUP BY at.id ORDER BY at.created_at desc limit 50 offset 0";
                             $queryTrend = mysqli_query($con, $sqlTrend);
                             if ($query && mysqli_num_rows($queryTrend) != 0) {
                                 $rowTrend = mysqli_fetch_all($queryTrend);
                                 //print_r($row[0]);exit;
                             }
 
-                            for ($l = 0; $l < 3; $l++) {
+                            for ($l = 0; $l < 3 && $setTrend < 4; $l++) {
                                 if (!empty($rowTrend[$l])) {
                                     $img_org = $rowTrend[$l][3] ? "../../uploads/articles/" . $rowTrend[$l][0] . '/' . $rowTrend[$l][3] : '';
                                     $img_src = file_exists("../../uploads/articles/" . $rowTrend[$l][0] . '/' . $rowTrend[$l][3]) ? $img_org : './images/no_images_small.jpg';
 
-                                    ?> 
-                                    <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
-                                        <div class="card h-100">
-                                            <a href="#"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
-                                            <div class="card-body">
-                                                <div class="category-label"><?php echo $rowTrend[$l][1] ?></div>
-                                                <p class="card-text"><?php echo $rowTrend[$l][4] ?></p>
-                                                <div class="post-date"><?php echo date('d/m/y', strtotime($rowTrend[$l][5])) ?></div>
+                                    $file_type_feat = $rowTrend[$l][3] ? finfo_file($finfo, "../../uploads/articles/" . $rowTrend[$l][0] . '/' . $rowTrend[$l][3]) : '';
+                                    if (strstr($file_type_feat, "image/") || !$rowTrend[$l][3]) {
+
+                                        ?>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
+                                            <div class="card h-100">
+                                                <a href="./post_details.php?id=<?php echo $rowTrend[$l][0]; ?>"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
+                                                <div class="card-body">
+                                                    <div class="category-label"><?php echo $rowTrend[$l][1] ?></div>
+                                                    <p class="card-text"><?php echo $rowTrend[$l][4] ?></p>
+                                                    <div class="post-date"><?php echo date('d/m/y', strtotime($rowTrend[$l][5])) ?></div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                <?php } else { ?>
+                                        <?php
+                                        $setTrend++;
+                                    }
+                                    if ($rowTrend[$l][3] && !(strstr($file_type_feat, "image/"))) {
+
+                                        ?>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
+                                            <div class="card h-100">
+                                                <a href="./post_details.php?id=<?php echo $rowTrend[$l][0]; ?>"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
+                                                <div class="card-body">
+                                                    <div class="category-label"><?php echo $rowTrend[$l][1] ?></div>
+                                                    <p class="card-text"><?php echo $rowTrend[$l][4] ?></p>
+                                                    <div class="post-date"><?php echo date('d/m/y', strtotime($rowTrend[$l][5])) ?></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <?php
+                                        $setTrend++;
+                                    }
+                                } else {
+
+                                    ?>
                                     <div class="col-lg-4 col-md-4 col-sm-6 portfolio-item">
                                         <div class="card h-100">
                                             <a href="#"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
@@ -311,6 +390,7 @@ if (isset($_POST['submit_btn'])) {
                                         </div>
                                     </div>
                                     <?php
+                                    $setTrend++;
                                 }
                             }
 
@@ -321,85 +401,54 @@ if (isset($_POST['submit_btn'])) {
                             <h2 class="sub-head clear-both width100pers"><span class="orange-txt">Featured</span> Videos and Images</h2>
                             <div class="row">
                                 <div class="col-lg-12 col-sm-6 portfolio-item">
-                                    <div class="featured-block-wrap">
+                                    <?php
+                                    $condition = '';
+                                    $imgVideo = 0;
+//                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
+                                    $condition .= " AND at.user_id='1' AND at.is_featured='1' AND ai.image_url != ''";
+                                    $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " GROUP BY at.id ORDER BY at.created_at desc limit 6 offset 0";
+                                    $query = mysqli_query($con, $sql);
+                                    if ($query && mysqli_num_rows($query) != 0) {
+                                        $rowImgVid = mysqli_fetch_all($query);
+                                        //print_r($row[0]);exit;
+                                    }
+                                    // $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                                    for ($x = 0; $x < count($rowImgVid) && $imgVideo < 4; $x++) {
+                                        if (!empty($rowImgVid[$x])) {
+                                            $file_type = finfo_file($finfo, "../../uploads/articles/" . $rowImgVid[$x][0] . '/' . $rowImgVid[$x][3]);
+                                            if (strstr($file_type, "video/")) {
 
+                                                ?>
+                                                <div class="featured-block-wrap">
+                                                    <div class="featured-block-media" ><div class="media-type"><i class="fa fa-play"></i></div><a href="../../uploads/articles/<?php echo $rowImgVid[$x][0] . '/' . $rowImgVid[$x][3] ?>" class="html5lightbox" data-width="480" data-height="320" title="<?php echo $rowImgVid[$x][1] ?>"><img class="card-img-top" src="./images/play_vid.png" alt=""></a></div>
+                                                    <div class="featured-block-txt" >
+                                                        <div class="category-label"><?php echo $rowImgVid[$x][1] ?></div>
+                                                        <p class="card-text"><?php echo $rowImgVid[$x][4] ?></p>
+                                                        <div class="post-date"><?php echo date('d/m/y', strtotime($rowImgVid[$x][5])) ?></div>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                                $imgVideo++;
+                                            } else if (strstr($file_type, "image/")) {
 
-                                        <div class="featured-block-media" ><div class="media-type"><i class="fa fa-camera"></i></div><a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a></div>
+                                                ?>
+                                                <div class="featured-block-wrap">
+                                                    <div class="featured-block-media" ><div class="media-type"><i class="fa fa-camera"></i></div><a href="../../uploads/articles/<?php echo $rowImgVid[$x][0] . '/' . $rowImgVid[$x][3] ?>" class="html5lightbox" data-width="480" data-height="320" title="<?php echo $rowImgVid[$x][1] ?>"><img class="card-img-top" src="../../uploads/articles/<?php echo $rowImgVid[$x][0] . '/' . $rowImgVid[$x][3] ?>" alt=""></a></div>
+                                                    <div class="featured-block-txt" >
+                                                        <div class="category-label"><?php echo $rowImgVid[$x][1] ?></div>
+                                                        <p class="card-text"><?php echo $rowImgVid[$x][4] ?></p>
+                                                        <div class="post-date"><?php echo date('d/m/y', strtotime($rowImgVid[$x][5])) ?></div>
+                                                    </div>
+                                                </div>
 
+                                                <?php
+                                                $imgVideo++;
+                                            }
+                                        }
+                                    }
 
-
-                                        <div class="featured-block-txt" >
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet,  eliteps  ipsum .  </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
-                                    <div class="featured-block-wrap">
-
-
-                                        <div class="featured-block-media" ><div class="media-type"><i class="fa fa-play"></i></div><a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a></div>
-
-
-
-                                        <div class="featured-block-txt" >
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet adipisicing elit. </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div><div class="featured-block-wrap">
-
-
-                                        <div class="featured-block-media" ><div class="media-type"><i class="fa fa-camera"></i></div><a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a></div>
-
-
-
-                                        <div class="featured-block-txt" >
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet,  eliteps  ipsum . </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div><div class="featured-block-wrap">
-
-
-                                        <div class="featured-block-media" ><div class="media-type"><i class="fa fa-play"></i></div><a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a></div>
-
-
-
-                                        <div class="featured-block-txt" >
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet,  eliteps  ipsum . </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
-                                    <div class="featured-block-wrap">
-
-
-                                        <div class="featured-block-media" ><div class="media-type"><i class="fa fa-play"></i></div><a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a></div>
-
-
-
-                                        <div class="featured-block-txt" >
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet,  eliteps  ipsum . </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
-                                    <div class="featured-block-wrap">
-
-
-                                        <div class="featured-block-media" ><div class="media-type"><i class="fa fa-play"></i></div><a href="#"><img class="card-img-top" src="images/3.jpg" alt=""></a></div>
-
-
-
-                                        <div class="featured-block-txt" >
-                                            <div class="category-label">Label</div>
-                                            <p class="card-text">Lorem ipsum dolor sit amet,  eliteps  ipsum . </p>
-                                            <div class="post-date">10/11/2017</div>
-                                        </div>
-                                    </div>
+                                    ?>
                                 </div>
-
-
 
                             </div>
                         </div>
@@ -411,41 +460,52 @@ if (isset($_POST['submit_btn'])) {
                                 $condition = '';
 //                    $condition .= " AND at.article_published ='1' AND at.user_id='1'";
                                 $condition .= " AND at.user_id='1' AND at.is_featured='0' AND at.is_trending='0'";
-                                $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " GROUP BY at.id ORDER BY at.created_at desc limit 5 offset 0";
+                                $sql = "SELECT at.id, at.article_title, at.article_content,ai.image_url,at.article_summary,at.created_at FROM article as at LEFT JOIN article_image ai ON at.id=ai.article_ID where 1=1" . $condition . " GROUP BY at.id ORDER BY at.created_at desc limit 50 offset 0";
                                 $query = mysqli_query($con, $sql);
                                 if ($query && mysqli_num_rows($query) != 0) {
                                     $rowRecent = mysqli_fetch_all($query);
                                     //print_r($row[0]);exit;
                                 }
-                                for ($m = 0; $m < 8; $m++) {
+                                $setRec = 1;
+                                for ($m = 0; $m < 50 && $setRec < 9; $m++) {
                                     if (!empty($rowRecent[$m])) {
-                                        $img_org = $rowRecent[$m][3] ? "../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3] : '';
-                                        $img_src = file_exists("../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3]) ? $img_org : './images/no_images_small.jpg';
+                                        $file_type2 = ($rowRecent[$m][3] && file_exists("../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3])) ? finfo_file($finfo, "../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3]) : '';
+                                        if (strstr($file_type2, "image/")) {
 
-                                        ?>
-                                        <div class="col-md-6 portfolio-item pr0">
-                                            <div class="card h-100">
-                                                <a href="#"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
-                                                <div class="card-body">
-                                                    <div class="category-label"><?php echo $rowRecent[$m][1] ?></div>
-                                                    <p class="card-text"><?php echo $rowRecent[$m][4] ?> </p>
-                                                    <div class="post-date"><?php echo date('d/m/y', strtotime($rowRecent[$m][5])) ?></div>
+                                            $img_org = $rowRecent[$m][3] ? "../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3] : '';
+                                            $img_src = file_exists("../../uploads/articles/" . $rowRecent[$m][0] . '/' . $rowRecent[$m][3]) ? $img_org : './images/no_images_small.jpg';
+
+                                            ?>
+                                            <div class="col-md-6 portfolio-item pr0">
+                                                <div class="card h-100">
+                                                    <a href="./post_details.php?id=<?php echo $rowRecent[$m][0]; ?>"><img class="card-img-top" src="<?php echo $img_src; ?>" alt=""></a>
+                                                    <div class="card-body">
+                                                        <div class="category-label"><?php echo $rowRecent[$m][1] ?></div>
+                                                        <p class="card-text"><?php echo $rowRecent[$m][4] ?> </p>
+                                                        <div class="post-date"><?php echo date('d/m/y', strtotime($rowRecent[$m][5])) ?></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    <?php } else { ?>
-                                        <div class="col-md-6 portfolio-item pr0">
-                                            <div class="card h-100">
-                                                <a href="#"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
-                                                <div class="card-body">
-                                                    <div class="category-label">No Article Exist</div>
-                                                    <p class="card-text"></p>
-                                                    <div class="post-date"></div>
+                                            <?php
+                                            $setRec++;
+                                        } else {
+
+                                            ?>
+                                            <div class="col-md-6 portfolio-item pr0">
+                                                <div class="card h-100">
+                                                    <a href="./post_details.php?id=<?php echo $rowRecent[$m][0]; ?>"><img class="card-img-top" src="./images/no_images_small.jpg" alt=""></a>
+                                                    <div class="card-body">
+                                                        <div class="category-label"><?php echo $rowRecent[$m][1] ?></div>
+                                                        <p class="card-text"><?php echo $rowRecent[$m][4] ?> </p>
+                                                        <div class="post-date"><?php echo date('d/m/y', strtotime($rowRecent[$m][5])) ?></div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                    <?php }
+                                            <?php
+                                        }
+                                        $setRec++;
+                                    }
                                 }
 
                                 ?>
@@ -534,7 +594,7 @@ if (isset($_POST['submit_btn'])) {
         </footer>
 
         <!-- Bootstrap core JavaScript -->
-        <script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>
+        <!--<script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>-->
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="./slick/slick.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript">
